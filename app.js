@@ -157,7 +157,7 @@ app.post('/post-inquiry', function (req, res) {
   });
 });
 
-app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0' || port);
+app.listen(process.env.PORT || 3000);
 
 app.use('/', indexRouter);
 app.use(function(req, res, next){

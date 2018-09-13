@@ -5,7 +5,7 @@ html {-moz-box-sizing:border-box; box-sizing:border-box;}
 body {background-color:#f4f4f4; color:#383C3E; font-family:'Roboto', sans-serif; font-size:1rem; font-weight:400; margin:0;}
 
 #header {background-color:#005DAC !important; padding:10px 0;}
-section.pageTitle {background:#009ee1 url("../images/subpage_cover.png"); padding:30px 0;}
+section.pageTitle {background:#009ee1 url("../images/subpage_cover.png"); padding:10px 0;}
 
 /* containers */
 .container {margin:0 auto; max-width:85%; padding:0;}

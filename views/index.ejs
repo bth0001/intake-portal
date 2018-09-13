@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+  <section id="header">
+    <div class="container flexbox flexJustify">
+      <div id="logo">
+        <a href="https://www.televox.com"><img src="../public/images/west_logo.png"></a>
+      </div><!-- end logo -->
+    </div><!-- end header container -->
+  </section><!-- end header -->
+  <section class="pageTitle">
+    <div class="container">
+      <h1><%= title %></h1>
+    </div><!-- end pageTitle container -->
+  </section><!-- end pageTitle -->
+
+  <div id="content">
+    <div id="modals">
+      <div class="modalsContainer"> 
+        <!-- Request Modal -->
+        <div id="requestModal" class="modal"> 
+          <!-- Modal content -->
+          <div class="modal-content">
+            <form class="requestForm" action="/post-request" method="POST">
+              <div class="form-exit"> <span class="closeRequest">&times;</span></div>
+              <div class="formTitle">Service Request</div>
+              <div class="form-group">
+                <label name="name">Name:
+                  <input type="text" name="name" required/>
+                </label>
+                <label name="name">Date:
+                  <input type="date" name="date" required/>
+                </label>
+                <label name="email">Email:
+                  <input type="text" name="email" required/>
+                </label>
+                <label name="businessUnit">Business Unit:
+                  <select name="businessUnit" id="businessUnit" required>
+                    <option value="" disabled selected>Select Business Unit</option>
+                    <option value="PhoneTree">PhoneTree</option>
+                    <option value="UCast">UCast</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </label>
+              </div><!-- end of form-group -->              
+              <div class="form-group">
+                <label name="languages">Language(s) in Question?
+                  <select name="languages" class="languages" multiple required>
+                    <option value="" disabled selected>Ctrl-click to select multiple languages</option>
+                    <option value="English">English</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="Arabic">Arabic</option>
+                    <option value="Mandarin">Mandarin</option>
+                    <option value="Cantonese">Cantonese </option>
+                    <option value="French">French</option>
+                    <option value="Italian">Italian</option>
+                    <option value="Portuguese">Portuguese</option>
+                    <option value="Russian">Russian</option>
+                    <option value="Vietnamese">Vietnamese</option>
+                    <option value="Korean">Korean</option>
+                    <option value="Hmong">Hmong</option>
+                    <option value="Haitian Creole">Haitian Creole</option>
+                    <option value="Tagalog">Tagalog</option>
+                    <option value="Ukrainian">Ukrainian</option>
+                    <option value="Greek">Greek</option>
+                    <option value="Farsi">Farsi</option>
+                    <option value="Polish">Polish</option>
+                  </select>
+                </label>
+                <div id="form-group">
+                  <p>Have We Done Work for this Client Before?</p>
+                  <label class="pastClient">Yes
+                    <input type="radio" name="yes" value="Yes">
+                  </label>
+                  <label class="pastClient">No
+                    <input type="radio" name="no" value="No">
+                  </label>
+                </div><!-- end of form-group -->  
+                <label name="voiceTalent">Voice Talent?
+                  <select name="voiceTalent" id="voiceTalent" multiple required>
+                    <option value="" disabled selected>Ctrl-click to select multiple voice talents</option>
+                    <option value="English" disabled>English</option>
+                      <option value="Kris">Kris</option>
+                      <option value="Marty">Marty</option>
+                      <option value="Kathy">Kathy</option>
+                      <option value="Suzanne">Suzanne</option>
+                      <option value="Meagan">Meagan</option>
+                      <option value="Erin">Erin</option>
+                      <option value="Sandra">Sandra</option>
+                      <option value="Maria">Maria</option>
+                      <option value="Sue">Sue</option>
+                      <option value="Bill">Bill</option>
+                      <option value="Dennis">Dennis</option>
+                    <option value="Spanish" disabled>Spanish</option>
+                      <option value="Suzanne">Suzanne</option>
+                      <option value="Rosa">Rosa</option>
+                      <option value="Sandra">Sandra</option>
+                      <option value="Maria">Maria</option>
+                    <option value="Arabic" disabled>Arabic</option>
+                      <option value="Christine">Christine</option>
+                      <option value="Dany">Dany</option>
+                    <option value="Mandarin" disabled>Mandarin</option>
+                      <option value="Kelly">Kelly</option>
+                    <option value="Cantonese" disabled>Cantonese </option>
+                      <option value="Kelly">Kelly</option>
+                    <option value="French" disabled>French</option>
+                      <option value="Christine">Christine</option>
+                      <option value="Isabel">Isabel</option>
+                    <option value="Italian" disabled>Italian</option>
+                      <option value="Daniela">Daniela</option>
+                    <option value="Portuguese" disabled>Portuguese</option>
+                      <option value="Alice">Alice</option>
+                    <option value="Russian" disabled>Russian</option>
+                      <option value="Svetlana">Svetlana</option>
+                      <option value="Katarina">Katarina</option>
+                      <option value="Yulia">Yulia</option>
+                    <option value="Vietnamese" disabled>Vietnamese</option>
+                      <option value="Yen">Yen</option>
+                      <option value="Truc">Truc</option>
+                    <option value="Korean" disabled>Korean</option>
+                      <option value="Kay">Kay</option>
+                    <option value="Hmong" disabled>Hmong</option>
+                      <option value="Paul">Paul</option>
+                    <option value="Haitian Creole" disabled>Haitian Creole</option>
+                      <option value="Marie">Marie</option>
+                    <option value="Tagalog" disabled>Tagalog</option>
+                      <option value="Emily">Emily</option>
+                    <option value="Ukrainian" disabled>Ukrainian</option>
+                      <option value="Lana">Lana</option>
+                    <option value="Greek" disabled>Greek</option>
+                      <option value="Mirella">Mirella</option>
+                    <option value="Farsi" disabled>Farsi</option>
+                      <option value="Behnaz">Behnaz</option>
+                    <option value="Polish" disabled>Polish</option>
+                      <option value="Isabel">Isabel</option>
+                  </select>
+                </label>
+              </div><!-- end of form-group -->
+              <div id="form-group">
+                <p>How Will Recording(s) be Used?
+                  <textarea name="use" maxlength="500" required></textarea>
+                </p>
+                <p>Are Base Elements Needed (dates, times, days, months, etc.)?
+                  <textarea name="baseElements" maxlength="500" required></textarea>
+                </p>
+                <p>Total Number of Recordings Needed?
+                  <textarea name="number" maxlength="100" required></textarea>
+                </p>
+                <p>Description of Goal and Task:
+                  <textarea name="description" maxlength="500" required></textarea>
+                </p>
+              </div><!-- end of form-group -->
+                          
+              <button>Submit</button>
+            </form><!-- End Request Form -->
+          </div><!-- end modal-content -->
+        </div><!-- end requestModal -->
+
+        <!-- Inquiry Modal -->
+        <div id="inquiryModal" class="modal"> 
+            <!-- Modal content -->
+          <div class="modal-content">
+            <form class="inquiryForm" action="/inquiries" method="POST">
+              <div class="form-exit"> <span class="closeInquiry">&times;</span></div>
+              <div class="formTitle">Service Inquiry</div>
+
+              <div class="form-group">
+                <label name="name">Name:
+                  <input type="text" name="name" />
+                </label>
+                <label name="email">Email:
+                  <input type="text" name="email" />
+                </label>
+                <label name="businessUnit">Business Unit:
+                  <select name="businessUnit" id="businessUnit">
+                    <option value="" disabled selected>Select Business Unit</option>
+                    <option value="PhoneTree">PhoneTree</option>
+                    <option value="UCast">UCast</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </label>
+              </div><!-- end of form-group -->              
+              <div class="form-group">
+                <label name="languages">Language(s) in Question?
+                  <select name="languages" class="languages" multiple>
+                    <option value="" disabled selected>Ctrl-click to select multiple languages</option>
+                    <option value="English">English</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="Arabic">Arabic</option>
+                    <option value="Mandarin">Mandarin</option>
+                    <option value="Cantonese">Cantonese </option>
+                    <option value="French">French</option>
+                    <option value="Italian">Italian</option>
+                    <option value="Portuguese">Portuguese</option>
+                    <option value="Russian">Russian</option>
+                    <option value="Vietnamese">Vietnamese</option>
+                    <option value="Korean">Korean</option>
+                    <option value="Hmong">Hmong</option>
+                    <option value="Haitian Creole">Haitian Creole</option>
+                    <option value="Tagalog">Tagalog</option>
+                    <option value="Ukrainian">Ukrainian</option>
+                    <option value="Greek">Greek</option>
+                    <option value="Farsi">Farsi</option>
+                    <option value="Polish">Polish</option>
+                  </select>
+                </label>
+                <div id="form-group">
+                  <p>Have We Done Work for this Client Before?</p>
+                  <label class="pastClient">Yes
+                    <input type="radio" name="yes" value="Yes">
+                  </label>
+                  <label class="pastClient">No
+                    <input type="radio" name="no" value="No">
+                  </label>
+                </div>
+                <label name="voiceTalent">Voice Talent?
+                  <select name="voiceTalent" id="voiceTalent" multiple>
+                    <option value="" disabled selected>Ctrl-click to select multiple voice talents</option>
+                    <option value="English" disabled>English</option>
+                      <option value="Kris">Kris</option>
+                      <option value="Marty">Marty</option>
+                      <option value="Kathy">Kathy</option>
+                      <option value="Suzanne">Suzanne</option>
+                      <option value="Meagan">Meagan</option>
+                      <option value="Erin">Erin</option>
+                      <option value="Sandra">Sandra</option>
+                      <option value="Maria">Maria</option>
+                      <option value="Sue">Sue</option>
+                      <option value="Bill">Bill</option>
+                      <option value="Dennis">Dennis</option>
+                    <option value="Spanish" disabled>Spanish</option>
+                      <option value="Suzanne">Suzanne</option>
+                      <option value="Rosa">Rosa</option>
+                      <option value="Sandra">Sandra</option>
+                      <option value="Maria">Maria</option>
+                    <option value="Arabic" disabled>Arabic</option>
+                      <option value="Christine">Christine</option>
+                      <option value="Dany">Dany</option>
+                    <option value="Mandarin" disabled>Mandarin</option>
+                      <option value="Kelly">Kelly</option>
+                    <option value="Cantonese" disabled>Cantonese </option>
+                      <option value="Kelly">Kelly</option>
+                    <option value="French" disabled>French</option>
+                      <option value="Christine">Christine</option>
+                      <option value="Isabel">Isabel</option>
+                    <option value="Italian" disabled>Italian</option>
+                      <option value="Daniela">Daniela</option>
+                    <option value="Portuguese" disabled>Portuguese</option>
+                      <option value="Alice">Alice</option>
+                    <option value="Russian" disabled>Russian</option>
+                      <option value="Svetlana">Svetlana</option>
+                      <option value="Katarina">Katarina</option>
+                      <option value="Yulia">Yulia</option>
+                    <option value="Vietnamese" disabled>Vietnamese</option>
+                      <option value="Yen">Yen</option>
+                      <option value="Truc">Truc</option>
+                    <option value="Korean" disabled>Korean</option>
+                      <option value="Kay">Kay</option>
+                    <option value="Hmong" disabled>Hmong</option>
+                      <option value="Paul">Paul</option>
+                    <option value="Haitian Creole" disabled>Haitian Creole</option>
+                      <option value="Marie">Marie</option>
+                    <option value="Tagalog" disabled>Tagalog</option>
+                      <option value="Emily">Emily</option>
+                    <option value="Ukrainian" disabled>Ukrainian</option>
+                      <option value="Lana">Lana</option>
+                    <option value="Greek" disabled>Greek</option>
+                      <option value="Mirella">Mirella</option>
+                    <option value="Farsi" disabled>Farsi</option>
+                      <option value="Behnaz">Behnaz</option>
+                    <option value="Polish" disabled>Polish</option>
+                      <option value="Isabel">Isabel</option>
+                  </select>
+                </label>
+              </div><!-- end of form-group -->
+              <div>
+                <p>How Will Recording(s) be Used?
+                  <textarea name="use" maxlength="500"></textarea>
+                </p>
+                <p>Are Base Elements Needed (dates, times, days, months, etc.)?
+                  <textarea name="baseElements" maxlength="500"></textarea>
+                </p>
+                <p>Total Number of Recordings Needed?
+                  <textarea name="number" maxlength="100"></textarea>
+                </p>
+                <p>Description of Goal and Task:
+                  <textarea type="text" name="description" maxlength="500"></textarea>
+                </p>
+              </div><!-- end of form-group -->
+              <div>
+                <p>
+                  Please specify a file, or a set of files:<br />
+                  <input type="file" name="datafile" size="40">
+                </p>
+              </div><!-- end of form-group -->   
+
+              <button>Submit</button>
+            </form><!-- End Inquiry Form -->
+          </div><!-- end modal-content -->
+        </div><!-- end inquiryModal -->
+      </div><!-- end modals container-->
+    </div><!-- end modals -->
+
+    <div class="container">
+
+      <div class="leftCol">
+        <p>If you would like to submit a service request, please choose the Service Request button below. Once the Voice Services team receives your request, we will review it and get back to you with a level of effort or if we have further questions.</p>
+        <!-- Trigger/Open The Request Modal -->
+        <button id="requestBtn" class="btn btn-md btn-primary">Service Request</button>
+        <br />
+        <p>If you would like to submit a service inquiry, please choose the Service Inquiry button below. Once the Voice Services team receives your request, we will review it and get back to you with details surrounding your inquiry.</p>
+        <!-- Trigger/Open The Inquiry Modal -->
+        <button id="inquiryBtn" class="btn btn-md btn-primary">Service Inquiry</button>
+      
+
+      </div>
+
+      <div class="rightCol">
+        <p>We offer a variety of voice services. To see what languages we support and their corresponding voice talents, select the dropdown menu below. </p>
+        <form class="languageForm" action="/request" method="POST">
+          <div class="form-group">
+            <label name="english">English:
+              <select name="request[language]" id="english">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Kris">Kris</option>
+                <option value="Marty">Marty</option>
+                <option value="Kathy">Kathy</option>
+                <option value="Suzanne">Suzanne</option>
+                <option value="Meagan">Meagan</option>
+                <option value="Erin">Erin</option>
+                <option value="Sandra">Sandra</option>
+                <option value="Maria">Maria</option>
+                <option value="Sue">Sue</option>
+                <option value="Bill">Bill</option>
+                <option value="Dennis">Dennis</option>
+              </select>
+            </label>
+            <label name="spanish">Spanish:
+              <select name="request[language]" id="spanish">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Suzanne">Suzanne</option>
+                <option value="Rosa">Rosa</option>
+                <option value="Sandra">Sandra</option>
+                <option value="Maria">Maria</option>
+              </select>
+            </label>
+            <label name="arabic">Arabic:
+              <select name="request[language]" id="arabic">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Christine">Christine</option>
+                <option value="Dany">Dany</option>
+              </select>
+            </label>
+            <label name="mandarin">Mandarin:
+              <select name="request[language]" id="mandarin">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Kelly">Kelly</option>
+              </select>
+            </label>
+            <label name="cantonese">Cantonese:
+              <select name="request[language]" id="cantonese">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Kelly">Kelly</option>
+              </select>
+            </label>
+            <label name="french">French:
+              <select name="request[language]" id="french">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Christine">Christine</option>
+                <option value="Isabel">Isabel</option>
+              </select>
+            </label>
+            <label name="italian">Italian:
+              <select name="request[language]" id="italian">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Daniela">Daniela</option>
+              </select>
+            </label>
+            <label name="portuguese">Portuguese:
+              <select name="request[language]" id="portuguese">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Alice">Alice</option>
+              </select>
+            </label>
+            <label name="russian">Russian:
+              <select name="request[language]" id="Russian">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Svetlana">Svetlana</option>
+                <option value="Katarina">Katarina</option>
+                <option value="Yulia">Yulia</option>
+              </select>
+            </label>
+            <label name="vietnamese">Vietnamese:
+              <select name="request[language]" id="vietnamese">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Yen">Yen</option>
+                <option value="Truc">Truc</option>
+              </select>
+            </label>
+            <label name="korean">Korean:
+              <select name="request[language]" id="korean">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Kay">Kay</option>
+              </select>
+            </label>
+            <label name="hmong">Hmong:
+              <select name="request[language]" id="hmong">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Paul">Paul</option>
+              </select>
+            </label>
+            <label name="hatianCreole">Haitian Creole:
+              <select name="request[language]" id="hatianCreole">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Marie">Marie</option>
+              </select>
+            </label>
+            <label name="tagalog">Tagalog:
+              <select name="request[language]" id="tagalog">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Emily">Emily</option>
+              </select>
+            </label>
+            <label name="ukrainian">Ukrainian:
+              <select name="request[language]" id="ukrainian">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Lana">Lana</option>
+              </select>
+            </label>
+            <label name="greek">Greek:
+              <select name="request[language]" id="greek">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Mirella">Mirella</option>
+              </select>
+            </label>
+            <label name="farsi">Farsi:
+              <select name="request[language]" id="farsi">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Behnaz">Behnaz</option>
+              </select>
+            </label>
+            <label name="polish">Polish:
+              <select name="request[language]" id="polish">
+                <option value="" disabled selected>Available Voice Talent</option>
+                <option value="Isabel">Isabel</option>
+              </select>
+            </label>
+          </div><!-- end of form-group -->    
+        </form><!-- End Language Form -->
+      </div><!-- end rightCol -->
+      
+    </div><!-- end content container -->
+  </div><!-- end content -->
+
+
+  <script>
+    // Get the request modal
+    var requestModal = document.getElementById('requestModal');
+    // Get the inquiry modal
+    var inquiryModal = document.getElementById('inquiryModal');
+
+    // Get the button that opens the request modal
+    var requestBtn = document.getElementById("requestBtn");
+    // Get the button that opens the inquiry modal
+    var inquiryBtn = document.getElementById("inquiryBtn");  
+
+    // Get the <span> element that closes the modal
+    var requestSpan = document.getElementsByClassName("closeRequest")[0];
+    var inquirySpan = document.getElementsByClassName("closeInquiry")[0];
+
+
+    // When the user clicks on the button, open the modal 
+    requestBtn.onclick = function () {
+      requestModal.style.display = "block";
+    }
+
+    inquiryBtn.onclick = function () {
+      inquiryModal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    requestSpan.onclick = function () {
+      requestModal.style.display = "none";
+    }
+
+    inquirySpan.onclick = function () {
+      inquiryModal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+      if (event.target == requestModal) {
+        requestModal.style.display = "none";
+      }
+    }
+
+    window.onclick = function (event) {
+      if (event.target == inquiryModal) {
+        inquiryModal.style.display = "none";
+      }
+    }
+
+  </script>
+
+</body>
+</html>

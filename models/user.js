@@ -1,44 +1,56 @@
 const mongoose = require("mongoose");
+var bcrypt = require('bcryptjs');
 var passportLocalMongoose = require("passport-local-mongoose");
 
 const UserSchema = new mongoose.Schema({
-  firstName: {
+  username: {
     type: String,
-    required: true
+    index: true
   },
   password: {
+    type: String
+  },
+  name: {
+    type: String
+  },
+  email: {
+    type: String
+  },
+  role: {
     type: String
   }
 });
 
 UserSchema.plugin(passportLocalMongoose, {
-  usernameField: "firstName"});
+  usernameField: "username"
+});
 
-  UserSchema.pre('save', function(next) {
-    var user = this;
-    var SALT_FACTOR = 5;
-  
-    if (!user.isModified('password')) return next();
-  
-    bcrypt.genSalt(SALT_FACTOR, function(err, salt) {
-      if (err) return next(err);
-  
-      bcrypt.hash(user.password, salt, null, function(err, hash) {
-        if (err) return next(err);
-        user.password = hash;
-        next();
-      });
+var User = module.exports = mongoose.model('User', UserSchema);
+
+module.exports.createUser = function(newUser, callback){
+	bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash(newUser.password, salt, function(err, hash) {
+      newUser.password = hash;
+      newUser.save(callback);
     });
-  });
-  
-  UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-      if (err) return cb(err);
-      cb(null, isMatch);
-    });
-  };
-  
+	});
+}
 
-const User = mongoose.model("User", UserSchema);
+module.exports.getUserByUsername = function(username, callback){
+	var query = {username: username};
+	User.findOne(query, callback);
+}
 
-module.exports = User;
+module.exports.getUserById = function(id, callback){
+	User.findById(id, callback);
+}
+
+module.exports.comparePassword = function(candidatePassword, hash, callback){
+	bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
+    console.log(candidatePassword);
+    console.log(hash);
+    if(err) throw err;
+
+    callback(null, isMatch);
+	});
+}

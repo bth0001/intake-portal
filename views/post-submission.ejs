@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='../stylesheets/style.css' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <section id="header">
+      <div class="container flexbox flexJustify">
+        <div id="logo">
+          <a href="/"><img src="https://webtools1.televoxsites.com/west-automated-notifications/includes/images/west_logo.png"></a>
+        </div><!-- end logo -->
+
+    </div><!-- end header container -->
+  </section><!-- end header -->
+
+  <section class="pageTitle">
+    <div class="container">
+      <h1><%= title %></h1>
+    </div><!-- end pageTitle container -->
+  </section><!-- end pageTitle -->
+
+  <div id="content">
+    <div class="container">
+      <p>Your submission has been received!  We will contact you shortly.  Click <a href="./">here</a> to return to the main page.</p>
+    </div>
+  </div>
+
+<% include partials/footer %>

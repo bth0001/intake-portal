@@ -1,0 +1,45 @@
+<% include partials/header %>
+
+    </div><!-- end header container -->
+  </section><!-- end header -->
+
+  <section class="pageTitle">
+    <div class="container">
+      <h1><%= title %></h1>
+    </div><!-- end pageTitle container -->
+  </section><!-- end pageTitle -->
+
+      <div id="content">
+
+        <div id="login">
+          <form class="loginForm" action="/login" method="POST">
+            <div class="form-group">
+              <h4>Please sign in:</h4>
+            </div>
+            <div class="form-group">
+              <input name="username" placeholder="Username" type="text">
+            </div>
+            <div class="form-group">
+              <input name="password" placeholder="Password" type="password">
+            </div>
+            <div class="form-group">
+              <button class="login">Sign In</button>
+            </div>
+            <!--<div class="signUp">
+              <div class="newUser" style="text-align:center;">New user?</div>
+              <a href="/signup"><button class="newUser" style="display:block; margin:0 auto;">Sign Up Here</button>
+            </div>-->
+          </form>
+        </div><!-- End login -->
+            
+      </div> <!-- content -->    
+    
+        <div id="back-to-top" ></div>
+      </div>
+
+  
+  <!--- JavaScript ---> 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+  
+<% include partials/footer %>
+        

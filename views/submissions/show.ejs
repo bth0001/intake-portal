@@ -1,0 +1,171 @@
+<% include ../partials/header %>
+
+    <div id="profileBar">
+      <div class="">Hi Admin!</div>
+      <div class=""><a href="/logout">Log Out</a></div>
+    </div><!-- profileBar -->
+  </div><!-- end header container -->
+</section><!-- end header -->
+
+  <section class="pageTitle">
+    <div class="container">
+      <h1>
+        <%= title %>
+      </h1>
+    </div><!-- end pageTitle container -->
+    <div id="navBar">
+      <div class="container flexbox flexJustify">
+        <ul class="flexbox">
+          <li><a href="/submissions"><span>All Submissions</span></a></li>
+          <li><a href="/submissions/received"><span>Received</span></a></li>
+          <li><a href="/submissions/in-progress"><span>In Progress</span></a></li>
+          <li><a href="/submissions/on-hold"><span>On Hold</span></a></li>
+          <li><a href="/submissions/awaiting-review"><span>Awaiting Review</span></a></li>
+          <li><a href="/submissions/completed"><span>Completed</span></a></li>
+        </ul>
+        <form action="/search" method="GET" class="searchBox flexbox flexJustify">
+          <input class="searchText" type="text" name="search" placeholder="Custom Search" />
+          <button class="searchIcon"><i class="fas fa-search"></i></button>
+        </form>
+      </div><!-- navBar container-->
+    </div><!-- navBar -->
+  </section><!-- end pageTitle -->
+
+  <div id="content">
+    <div class="container">
+      <div id="tableRow" class="flexbox">
+        <div class="widget fullCol">
+          <div id="dashSubmissions">
+            <% var timeStamp = submission.created_at.toString(); %>
+            <% var timeId = timeStamp.substr(4, 17); %>
+            <form enctype="multipart/form-data" class="inquiryForm">
+              <p><i class="fas fa-arrow-left"></i> <a href="javascript:history.back()"> back</a></p>
+              <div class="formTitle">Submission from <%= submission.name %><br /><div class="formDate" style="font-size:18px; text-align:center;"><%= timeId.replace(/\s/g, ''); %></div></div>
+              
+              <div class="form-group">
+                <p><strong>Submission Type:</strong><br /><em><%= submission.itemType %></em></p>
+                <p><strong>Status:</strong><br /><em><%= submission.status %></em></p>
+                <p><strong>Date Received:</strong><br /><em><%= submission.date %></em></p>
+              </div>
+              <div class="form-group">
+                <p><strong>Email:</strong><br /><em><%= submission.email %></em></p>
+                <p><strong>Languages:</strong><br /><em><%= submission.languages %></em></p>
+                <p><strong>Voice Talent:</strong><br /><em><%= submission.voiceTalent %></em></p>
+              </div><!-- end of form-group -->
+              <div class="form-group">
+                <p><strong>How will recording(s) be used?</strong><br><em><%= submission.useSelection %></em></p>
+              </div>
+              <div class="form-group">
+                <p><strong>How will recording(s) be used? (more detail)</strong><br><em><%= submission.use %></em></p>
+              </div>
+              <div class="form-group">
+                <p><strong>Total number of recordings per language:</strong><br><em><%= submission.number %></em></p>
+              </div>
+              <div class="form-group">
+                <p><strong>Additional information/comments/questions:</strong><br><em><%= submission.description %></em></p>
+              </div>
+              <div class="form-group">
+                <p><strong>Supporting documentation</strong><br>
+                  <%	for(var i = 0; i < submission.attachment.length; i++){ %>
+                    <p><em><a href="/<%= submission.attachment[i].documentation %>"><%= submission.attachment[i].documentation %></a></em></p>
+                  <% } %>
+                </p>
+              </div>
+              <div id="actionItem">
+                <div class="actionItemTable">
+                  <div class="header flexbox">
+                    <div class="cell notes">Notes</div>
+                    <div class="cell attachments">Attachment(s)</div>
+                    <div class="cell id">ID</div>
+                  </div>
+                  <% for (i=0; i < submission.actionItems.length; i++) { %>
+                    <% var actionItemsCount = -1; %>
+                    <% actionItemsCount++ %>
+                    <div class="actionItem flexbox row">
+                      <div class="cell notes"><%= submission.actionItems[i].actionItemNotes %></div>
+                      <div class="cell attachments"><%= submission.actionItems[i].actionItemAttachments %></div>
+                      <div class="cell id"><%= actionItemsCount %></div>
+                    </div>
+                  <% } %>
+                </div><!-- end of form-group -->
+              </div><!--end actionItem-->
+              
+              <button type="button" id="actionItemEmail">Email to client <i class="fas fa-envelope"></i></button>
+
+            </form><!-- End Inquiry Form -->
+
+            <div id="emailModal">
+              <form onsubmit="countActionItems();" class="emailForm"  action="/send-email" method="put">
+                <div class="form-exit"> <span class="closeEmail">&times;</span></div>
+                <p>Are you sure you want to send this email?</p>
+                <button type="submit" id="actionItemEmail">Send email <i class="fas fa-envelope"></i></button>
+              </form>
+            </div>
+
+          </div><!-- end of dashSubmissions -->
+        </div><!-- end of widget fullCol -->
+      </div><!-- end of tableRow flexbox -->
+    </div><!-- end of content container  -->
+  </div><!-- end of content -->
+
+  <script>
+
+    $(document).ready(function(){
+      var count = 0;
+      $("div.actionItem:last-of-type input.actionItemNotes").attr("name", "submission[actionItems][" + count + "][actionItemNotes]");
+      $("div.actionItem:last-of-type input.actionItemAttachments").attr("name", "submission[actionItems][" + count + "][actionItemAttachments");
+      
+      $("#addActionItem").click(function () {              
+        count++;
+        var oldActionItem = $(".actionItem:last-of-type");
+        var newActionItemInput = oldActionItem.clone().appendTo(".actionItemTable");
+        newActionItemInput.val("");
+        $(".blankActionItem").css("display", "block");
+        $("div.actionItem input.actionItemNotes").attr("name", "submission[actionItems][" + count + "][actionItemNotes]");
+        $("div.actionItem input.actionItemAttachments").attr("name", "submission[actionItems][" + count + "][actionItemAttachments]");
+      });
+
+      // Get the email modal
+      var emailModal = document.getElementById('emailModal');
+      // Get the email button
+      var actionItemEmail = document.getElementById("actionItemEmail");
+      // Get the <span> element that closes the modal
+      var emailSpan = document.getElementsByClassName("closeEmail")[0];
+      // When the user clicks on the button, open the modal 
+      actionItemEmail.onclick = function () {emailModal.style.display = "block";}
+      // When the user clicks on the span, close the modal
+      emailSpan.onclick = function () {emailModal.style.display = "none";}
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function (event) {
+        if (event.target == emailModal) {emailModal.style.display = "none";}
+      }
+    
+    });
+
+    //Counts action items on form submit
+    function countActionItems(){
+      var count = 0;
+        $(this).find(".actionItemNotes").attr("name", "actionItem[actionItems][" + count + "][actionItemNotes]");
+        $(this).find(".actionItemNotes").attr("name", "actionItem[actionItems][" + count + "][actionItemAttachments]");
+        count++;
+    }
+  </script>
+
+
+  <section id="footer">
+    <div class="container flexbox flexJustify">
+      <div class="west-copyright">
+        <p><a href="/submissions" class="logo"><img src="../../images/west_footer_logo.jpg"></a>West
+          Corporation is a global provider of communication and network infrastructure services. West helps its clients more effectively communicate, collaborate and connect with their audiences through a diverse portfolio of solutions that include unified communications services, safety services, interactive services such as automated notifications, telecom services and specialty agent services. <br />
+          For 30 years, West has provided reliable, high-quality, voice and data services. West has sales and
+          operations in the United States, Canada, Europe, the Middle East, Asia Pacific and Latin America. For more information, please call 1-800-841-9000.</p>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; West Corporation. All Rights Reserved. <a href="https://www.west.com/legal-privacy/" target="_blank">Legal &amp; Privacy</a> | <a href="/submissions/blog/">Blog</a> | <a href="about/news/">Corporate News</a> | <a href="contact/">Contact</a></p>
+      </div>
+    </div><!-- end footer container -->
+  </section><!-- end footer -->
+
+</body>
+
+</html>

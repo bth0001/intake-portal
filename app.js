@@ -1,184 +1,106 @@
 var express = require('express');
-var app = express();
-var flash = require("connect-flash");
 var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
 var bodyParser = require('body-parser');
-var passport = require("passport");
+var app = express();
+var cookieParser = require('cookie-parser');
+var expressValidator = require('express-validator');
+var flash = require("connect-flash");
 var session = require("express-session");
+var logger = require('morgan');
+var passport = require("passport");
+var LocalStrategy = require('passport-local').Strategy;
+var mongo = require('mongodb');
 var mongoose = require("mongoose");
 var indexRouter = require('./routes/index');
-var Request = require('./models/requests');
-var Inquiry = require('./models/inquiries');
-var nodemailer = require('nodemailer');
 var methodOverride = require("method-override");
+var db = mongoose.connection;
+const errorHandler = require("./handlers/error");
 
 // Required Files
 var User = require("./models/user");
 var indexRouter = require('./routes/index');
-var authRoutes = require('./routes/authentication');
 
-mongoose.Promise = global.Promise;mongoose.connect("mongodb://admin:voiceadmin1@ds018268.mlab.com:18268/voice-services");
+mongoose.Promise = global.Promise;
+
+mongoose.connect("mongodb://admin:voiceadmin1@ds018268.mlab.com:18268/voice-services", { useNewUrlParser: true });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set('debug', true);
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 app.use(cookieParser());
+
+//Set Static Folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+//Express Session
 app.use(session({ cookie: { maxAge: 60000 }, 
-  secret: 'woot',
-  resave: false, 
-  saveUninitialized: false}));
+  secret: 'secret',
+  saveUninitialized: true,
+  resave: true})
+);
+// Connect Flash
 app.use(flash());
-app.use('/uploads', express.static(__dirname + '/uploads'));
-//==============================================================================
-//PASSPORT CONFIGURATION
+
+//Passport init
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(User.createStrategy(function(email, password, done) {
-  User.findOne({ email: email }, function(err, user) {
-    if (err) return done(err);
-    if (!user) return done(null, false, { message: 'Incorrect email.' });
-    user.comparePassword(password, function(err, isMatch) {
-      if (isMatch) {
-        return done(null, user);
-      } else {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-    });
-  });
-}));
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
 
-//==============================================================================
-app.use(function(req, res, next){
-  res.locals.currentUser = req.user;
-  res.locals.error = req.flash("error");
-  res.locals.success = req.flash("success");
+//Express Validator
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+    var namespace = param.split('.'), root = namespace.shift(), formParam = root;
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param: formParam,
+      msg: msg,
+      value: value
+    };
+  }
+}));
+
+
+
+app.get('/success', (req, res) => res.send("Welcome "+req.query.username+"!!"));
+app.get('/error', (req, res) => res.send("error logging in"));
+
+app.use(function (req, res, next) {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  res.locals.moment = req.flash('moment');
   next();
 });
 
-// ----For Route Files----start
-app.use('/', [
-  indexRouter,
-  authRoutes
-]);
+//==============================================================================
 
+app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0' );
 
-app.all("*", isLoggedIn); // For Authentication 
-// ----For Route Files----end
+app.use('/', indexRouter);
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  req.flash("error", "Please log in First!");
-  res.redirect("/");
+  req.flash("error", "Please Log in First!");
+  res.redirect("/login");
 }
 
-//==============================================================================
-app.post('/post-request', function (req, res) {
-  var requestData = new Request(req.body);
-  requestData.save()
-  .then(item => {
-    res.render('post-request', { title: 'Request succesfully submitted.  We will contact you shortly!' });
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'westvoiceservices@gmail.com',
-        pass: 'televoice1'
-      }
-    });
-    
-    var mailOptions = {
-      from: 'westvoiceservices@gmail.com',
-      to: 'westvoiceservices@gmail.com',
-      subject: 'New Voice Services Request',
-      html: '<h1>Hello!</h1><p>A new Voice Services request has been received.  Sign in <a href="http://localhost:3000/view-requests">here</a> to view.</p>'
-    };
-    
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
-    }); 
-  })
-  .catch(err => {
-    res.status(400).send("Unable to save to database");
-  });
+//ERROR HANDLING SETUP
+app.use(function(req, res, next) {
+  let err = new Error("Not Found");
+  err.status = 404;
+  req.flash("error", "Page does not Exist: 404");
+  res.redirect("/login");
 });
 
-app.post('/post-inquiry', function (req, res) {
-  var inquiryData = new Inquiry(req.body);
-  inquiryData.save()
-  .then(item => {
-    res.render('post-inquiry', { title: 'Your inquiry has been recevied.  We will contact you shortly!' });
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'westvoiceservices@gmail.com',
-        pass: 'televoice1'
-      }
-    });
-    
-    var mailOptions = {
-      from: 'westvoiceservices@gmail.com',
-      to: 'westvoiceservices@gmail.com',
-      subject: 'New Voice Services Inquiry',
-      html: '<h1>Hello!</h1><p>A new Voice Services inquiry has been received.  Sign in <a href="http://localhost:3000/view-inquiries">here</a> to view.</p>'
-    };
-    
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
-    }); 
-  })
-  .catch(err => {
-    res.status(400).send("Unable to save to database");
-  });
-});
-
-var port = process.env.PORT || 3000;
-
-server.listen(port, function() {
-  console.log("App is running on port " + port);
-});
-
-app.use('/', indexRouter);
-app.use(function(req, res, next){
-  res.locals.currentUser = req.user;
-  res.locals.error = req.flash("error");
-  res.locals.success = req.flash("success");
-  next();
-});
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+app.use(errorHandler);
+app.use('/index', indexRouter);
 
 module.exports = app;

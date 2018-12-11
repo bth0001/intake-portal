@@ -1,0 +1,197 @@
+<% include ../partials/header %>
+
+      <div id="profileBar">
+        <% users.forEach(function(user){ %>
+          <% if(user.username != "voiceadmin"){ %>
+            <div class="">
+              <a href="/login">Login</a>
+            </div>
+          <% } else { %>
+            <div class="">Hi <%= user.name %>!</div>
+            <div class=""><a href="/logout">Log Out</a></div>
+          <% } %>
+        <% }) %>
+      </div><!-- profileBar -->
+    </div><!-- end header container -->
+  </section><!-- end header -->
+
+  <section class="pageTitle">
+    <div class="container">
+      <h1><%= title %></h1>
+    </div><!-- end pageTitle container -->
+    <div id="navBar">
+      <div class="container flexbox flexJustify">
+        <ul class="flexbox">
+          <li><a class="is-active" href="/"><span>All Submissions</span></a></li>
+          <li><a href="/submissions/received"><span>Received</span></a></li>
+          <li><a href="/submissions/in-progress"><span>In Progress</span></a></li>
+          <li><a href="/submissions/on-hold"><span>On Hold</span></a></li>
+          <li><a href="/submissions/awaiting-review"><span>Awaiting Review</span></a></li>
+          <li><a href="/submissions/completed"><span>Completed</span></a></li>
+        </ul>
+        <form action="/search" method="GET" class="searchBox flexbox flexJustify">
+          <input class="searchText" type="text" name="search" placeholder="Custom Search" />
+          <button class="searchIcon"><i class="fas fa-search"></i></button>
+        </form>
+      </div><!-- navBar container-->
+    </div><!-- navBar -->
+  </section><!-- end pageTitle -->
+  
+  <% function countSubmission() { %>
+    <% var reqCount = 0; var inqCount = 0; %>
+
+    <div id="content">
+      <div class="container">
+        <div id="tableRow" class="flexbox">
+          <div class="widget fullCol">
+            <div class="table graph">
+                <h2>Submissions</h2>
+                <div class="wrapper flexbox">
+                  <div class="column flexbox">
+                    <div class="cell graph"><span class="circle showAll">All Submissions <!--- <%= reqCount + inqCount %>--></span></div>
+                  </div>
+                  <div class="column flexbox">
+                    <div class="cell graph"><span class="circle showRequests">Requests <!--- <%= reqCount %>--></span></div>
+                  </div>
+                  <div class="column flexbox">
+                    <div class="cell graph"><span class="circle showInquiries">Inquiries <!--- <%= inqCount %>--></span></div>
+                  </div>
+                </div>
+              </div>
+            <div id="dashSubmissions">
+
+              <div id="requests">
+                <% submissions.forEach(function(submission){ %>
+                  <%	for(var i = 0; i < submission.itemType[i].length; i++){ %>
+                    <% if(submission.itemType === "Request" && submission.status != "Completed"){ %>
+                      <% reqCount++ %>
+                      <div id="accordion">
+                        <div id="dashRequest">
+                          <div class="table">
+                            <div class="row title flexbox">
+                              <div class="cell name"><strong>Name: </strong><br /><em><%= submission.name %></em></div>
+                              <div class="cell status"><strong>Status: </strong><br /><em><%= submission.status %></em></div>
+                              <div class="cell date"><strong>Date: </strong><br /><em><%= submission.date %></em></div>
+                              <div class="cell arrow" data-panel-id="panel1"><i class="fas fa-angle-down"></i></div>
+                              <div class="expanded">
+                                <div class="cell name"><strong>Type: </strong><br /><em><%= submission.itemType %></em></div>
+                                <div class="cell email"><strong>Email: </strong><br /><a href="mailto:<%= submission.email %>" target="_blank"><em><%= submission.email %></em></a></div>
+                                <div class="cell languages"><strong>What languages are being considered? </strong><br /><em><%= submission.languages %></em></div>
+                                <div class="cell voiceTalent"><strong>Which voice talent(s) are you interested in using?</strong><br /><em><%= submission.voiceTalent %></em></div>
+                                <div class="cell useSelection"><strong>How will recording(s) be used?</strong><br /><em><%= submission.useSelection %></em></div>
+                                <div class="cell use"><strong>How will recording(s) be used? (more detail)</strong><br /><em><%= submission.use %></em></div>
+                                <div class="cell number"><strong>Total number of recordings per language:</strong><br /><em><%= submission.number %></em></div>
+                                <div class="cell description"><strong>Additional information/comments/questions:</strong><br /><em><%= submission.description %></em></div>
+                                <div class="cell attachment"><strong>Supporting documentation:</strong><br />
+                                  <%	for(var i = 0; i < submission.attachment.length; i++){ %>
+                                    <p><em><a href="/<%= submission.attachment[i].documentation %>"><%= submission.attachment[i].documentation %></a></em></p>
+                                  <% } %>
+                                </div>
+
+                                <div class="cell description right">
+                                  <div class="change">
+                                    <a class="button edit" href="/submissions/<%= submission._id %>/edit">View/Edit Request</a>
+                                  </div>
+                                </div>
+                              </div><!-- end of expanded --> 
+                            </div><!-- end of row title flexbox-->
+                          </div><!-- end of dashRequest table -->
+                        </div><!-- end of dashRequest -->
+                      </div><!-- end of accordion -->
+                    <% } %>
+                  <% } %>
+                <% }); %>
+                <div class="reqCount"><h3>Requests - <%= reqCount %></h3></div>  
+              </div><!-- end of requests -->
+
+              <div id="inquiries">
+                <% submissions.forEach(function(submission){ %>
+                  <%	for(var i = 0; i < submission.itemType[i].length; i++){ %>
+                    <% if(submission.itemType === "Inquiry"){ %>
+                      <% inqCount++ %>
+                      <div id="accordion">
+                        <div id="dashInquiry">
+                          <div class="table">
+                            <div class="row title flexbox">
+                              <div class="cell name"><strong>Name: </strong><br /><em><%= submission.name %></em></div>
+                              <div class="cell status"><strong>Status: </strong><br /><em><%= submission.status %></em></div>
+                              <div class="cell date"><strong>Date: </strong><br /><em><%= submission.date %></em></div>
+                              <div class="cell arrow" data-panel-id="panel1"><i class="fas fa-angle-down"></i></div>
+                              <div class="expanded">
+                                <div class="cell name"><strong>Type: </strong><br /><em><%= submission.itemType %></em></div>
+                                <div class="cell email"><strong>Email: </strong><br /><a href="mailto:<%= submission.email %>" target="_blank"><em><%= submission.email %></em></a></div>
+                                <div class="cell languages"><strong>What languages are being considered? </strong><br /><em><%= submission.languages %></em></div>
+                                <div class="cell voiceTalent"><strong>Which voice talent(s) are you interested in using?</strong><br /><em><%= submission.voiceTalent %></em></div>
+                                <div class="cell useSelection"><strong>How will recording(s) be used?</strong><br /><em><%= submission.useSelection %></em></div>
+                                <div class="cell use"><strong>How will recording(s) be used? (more detail)</strong><br /><em><%= submission.use %></em></div>
+                                <div class="cell number"><strong>Total number of recordings per language:</strong><br /><em><%= submission.number %></em></div>
+                                <div class="cell number"><strong>Target completion date:</strong><br /><em><%= submission.targetDate %></em></div>
+                                <div class="cell description"><strong>Additional information/comments/questions:</strong><br /><em><%= submission.description %></em></div>
+                                <div class="cell attachment"><strong>Supporting documentation:</strong><br />
+                                  <% for(var i = 0; i < submission.attachment.length; i++){ %>
+                                    <p><em><a href="/<%= submission.attachment[i].documentation %>"><%= submission.attachment[i].documentation %></a></em></p>
+                                  <% } %>
+                                </div>
+
+                                <div class="cell description right">
+                                  <div class="change">
+                                    <a class="button edit" href="/submissions/<%= submission._id %>/edit">View/Edit Inquiry</a>
+                                  </div>
+                                </div>
+                              </div><!-- end of expanded --> 
+                            </div><!-- end of row title flexbox-->
+                          </div><!-- end of dashInquiry table -->
+                        </div><!-- end of dashInquiry -->
+                      </div><!-- end of accordion -->
+                    <% } %>
+                  <% } %>
+                <% }); %>
+                <div class="inqCount"><h3>Inquiries - <%= inqCount %></h3></div>
+              </div><!-- end of inquiries -->
+
+            </div><!-- end of dashSubmissions -->
+          </div><!-- end of widget fullCol -->
+        </div><!-- end of tableRow flexbox -->
+      </div><!-- end of content container  --> 
+    </div><!-- end of content --> 
+
+  <% } %>
+
+  <script>
+
+    $(document).ready(function () {
+  
+      // list of team members drop down when you click the purple arrow beside your name
+      $('.selectTeamMember .fa-angle-down').click(function() { $('#allTeamMembers').slideToggle(); });
+  
+      // when you click on requests circle it shows submitted requests
+      $('.showRequests').click(function() {
+        $('#inquiries').hide();
+        $('#requests').fadeIn("slow");
+      });
+      // when you click on inquiries circle it shows submitted inquiries
+      $('.showInquiries').click(function() {
+        $('#requests').hide();
+        $('#inquiries').fadeIn("slow");
+      });
+      // when you click on show all circle it shows all submissions
+      $('.showAll').click(function() {
+        $('#inquiries, #requests').fadeIn("slow");
+      });
+
+      $('.reqCount').prependTo('#requests');
+      $('.inqCount').prependTo('#inquiries');
+
+      // when you click the  arrow beside a submission it expands for further info
+      $('#accordion .fa-angle-down').click(function() {
+        $(this).parent().next('.expanded').slideToggle();
+        $(this).toggleClass("fa-angle-up");
+      });
+
+    });
+
+  </script>
+
+  <% countSubmission(); %>
+
+<% include ../partials/footer %>

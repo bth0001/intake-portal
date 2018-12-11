@@ -1,0 +1,36 @@
+<% include ../partials/footer %>
+
+  <section class="pageTitle">
+    <div class="container">
+      <h1><%= title %></h1>
+    </div><!-- end pageTitle container -->
+  </section><!-- end pageTitle -->
+
+  <div id="content">
+    <div class="container">
+      <div id="template" class="login">
+        <div class="container flexbox">
+          <div id="login">
+            <form class="form" action="/submissions" method="POST">
+              <div class="wrapper flexbox">
+                <div class="password flexbox">
+                  <input name="password" placeholder="Access Code" type="password">
+                </div>
+                <button class="login">Sign In</button>
+              </div>
+            </form>
+          </div><!-- End login --> 
+        </div><!-- End Template Container -->
+      </div><!-- Template -->
+    </div><!-- Content Container -->
+  </div><!-- Content -->
+
+  <script>
+    // when you click the purple arrow beside a task it expands for further info
+    $('#accordion .fa-angle-down').click(function() {
+      $(this).parent().next('.expanded').slideToggle();
+      $("#accordion .fa-angle-down").toggleClass("fa-angle-up");
+    });
+  </script>
+
+<% include ../partials/footer %>

@@ -1,0 +1,323 @@
+<% include partials/header %>
+
+      <div id="profileBar">
+            <div class="">Hi Admin!</div>
+            <div class=""><a href="/logout">Log Out</a></div>
+      </div><!-- profileBar -->
+    </div><!-- end header container -->
+  </section><!-- end header -->
+
+  <section class="pageTitle">
+    <div class="container">
+      <h1><%= title %></h1>
+    </div><!-- end pageTitle container -->
+    <div id="navBar">
+      <div class="container flexbox flexJustify">
+        <ul class="flexbox">
+          <li><a href="/submissions"><span>All Submissions</span></a></li>
+          <li><a href="/submissions/received"><span>Received</span></a></li>
+          <li><a href="/submissions/in-progress"><span>In Progress</span></a></li>
+          <li><a href="/submissions/on-hold"><span>On Hold</span></a></li>
+          <li><a href="/submissions/awaiting-review"><span>Awaiting Review</span></a></li>
+          <li><a href="/submissions/completed"><span>Completed</span></a></li>
+        </ul>
+        <form action="/search" method="GET" class="searchBox flexbox flexJustify">
+          <input class="searchText" type="text" name="search" placeholder="Custom Search" />
+          <button class="searchIcon"><i class="fas fa-search"></i></button>
+        </form>
+      </div><!-- navBar container-->
+    </div><!-- navBar -->
+  </section><!-- end pageTitle -->
+
+  <style>
+    /* General dropdown styles */       
+    .dropdown dd, .dropdown dt, .dropdown ul { margin:0px; padding:0px; }
+        
+    .dropdown dt a span {cursor:pointer; display:block; padding:5px;}
+    /* UL styles */
+    /* .dropdown dd ul {display:none; list-style:none; padding:5px 0px; position:absolute; left:0px; top:2px; width:auto; min-width:170px;} */
+    .dropdown span.value { display:none;}
+    .dropdown dd ul li a { padding:5px; display:block;}
+    .selectTeamMember a:hover {text-decoration: none;}
+
+    html {-moz-box-sizing:border-box; box-sizing:border-box;}
+    *, *:before, *:after {-moz-box-sizing:inherit; box-sizing:inherit;}
+    body {background-color:#f4f4f4; color:#383C3E; font-family:'Roboto', sans-serif; font-size:1rem; font-weight:400; margin:0;}
+
+    #header {background-color:#005DAC !important; padding:0;}
+    section.pageTitle {background:#009ee1 url("../images/subpage_cover.png"); padding:10px 0 0;}
+    #navBar {background:none; padding:30px 0 0;}
+    #navBar a {color:#fff; display:block; font-family:"Roboto",sans-serif; font-size:1em; font-weight:300; padding:15px; text-decoration:none;}
+    #navBar a:hover, #navBar a:focus, #navBar a.is-active {background:#f4f4f4; color:#2637b0;}
+    #navBar ul {padding:0; margin:0;}
+    #navBar ul li {list-style:none;}
+
+    /* containers */
+    .container {margin:0 auto; max-width:85%; padding:0;}
+    #content {padding:40px 0 80px;}
+    #content > div.container {display:flex; flex-direction:row; flex-wrap:nowrap;}
+    #content > div.container > div.leftCol {flex:1 70%; margin:0 4vw 0 0;}
+    #content > div.container > div.rightCol {flex:1 30%;}
+    #content > div.container > div.rightCol p {font-size:.95em;}
+    #content div.title {margin:0 0 20px;}
+    #content div.title h1 {margin:0; padding:0;}
+    .links {margin:0 auto 50px; max-width:85%; text-align:right;}
+    .right {float:right;}
+
+    .flexbox {display:-webkit-box; display:-ms-flexbox; display:flex; -ms-flex-wrap:wrap;	flex-wrap:wrap;}
+    .flexLeft {-webkit-box-pack:flex-start;	-ms-flex-pack:flex-start;	justify-content:flex-start;	-webkit-box-align:center;	-ms-flex-align:center; align-items:center;}
+    .flexRight {-webkit-box-pack:flex-end; -ms-flex-pack:flex-end; justify-content:flex-end; -webkit-box-align:center; -ms-flex-align:center;align-items:center;}
+    .flexCenter {-webkit-box-pack:center;	-ms-flex-pack:center;	justify-content:center;	-webkit-box-align:center;	-ms-flex-align:center; align-items:center;}
+    .flexJustify {-webkit-box-align:center;	-ms-flex-align:center; align-items:center; -webkit-box-pack:justify; -ms-flex-pack:justify; justify-content:space-between;}
+    .flexAround {-webkit-box-pack:justify; -ms-flex-pack:justify; justify-content:space-around;}
+    .center {text-align:center;}
+
+    /* General Styles */
+    h1, h2, h3, h4, h5, h6, p, li {line-height:1.35em; margin:0;}
+    h1, h2, h3, h4, h5, h6 {color:#0092D1; font-weight:700; margin:0;}
+    #text h2, #text h3, #text h4, #text h5, #text h6 {margin-top:1em;}
+    h1 {color:#fff; font-size:2.75em; font-weight:100; line-height:1.1em;}
+    h2 {color:#808080; font-size:2.15em; font-weight:300; line-height:1.1em; margin:0 0 15px;}
+    h3 {font-size:1.25em;}
+    h4 {font-size:1.15em;}
+    h5 {font-size:1.05em;}
+    h6 {font-size:1em;}
+    p {color:#5c6163; font-size:1em; line-height:1.5em; margin:0 0 1em;}
+    p ~ ul li {color:#5c6163; font-size:1em;}
+    a {color:#005dac; cursor:pointer; font-weight:700; position:relative; text-decoration:none; -webkit-transition:color .25s ease-in-out; transition:color .25s ease-in-out;}
+    a:hover, a:focus {color:#2D383F; text-decoration:underline;}
+    ul, ol {list-style:none; margin:0; padding:0;}
+    #content div.rightCol > ul {padding:0 0 15px;}
+    #content div.rightCol > ul > li:before {content:"- ";}
+
+    .fas {padding:10px 5px;}
+
+    /* search box */
+    .searchBox {background:rgba(255, 255, 255, 0.1); color:#fff; width:250px; padding:6px 15px;}
+    form.searchBox {box-shadow:none; max-width:none; margin:0 0 0 auto; text-align:left; background:transparent; position:relative;}
+    form.searchBox input {width:250px; padding:6px 15px; margin:auto; background-color:rgba(255, 255, 255, 0.1); border:0; color:#fff !important;}
+    form.searchBox input::placeholder {color:#fff;}
+    form.searchBox button {background-color:transparent; padding:0; margin:auto; border-radius:0; display:inline-block; position:absolute; right:30px; border:none; color:#fff;}
+    /* Alert Message */
+    #alertMessage {bottom:auto; left:50%; position:fixed; right:auto; top:10px; transform:translateX(-50%);}
+
+    /* Form styling */
+    form {background-color:#e8e3e3; box-shadow:1px 1px 10px rgba(0,0,0,0.34); margin:30px auto; text-align:left; padding:30px;}
+    .form-exit {font-size:1.3em; text-align:right;}
+    .formTitle {font-size:30px; font-weight:600; margin:0 0 20px; text-align:center;}
+    button, .button {background-color:#005dac; border:2px solid #41719c; color:#fff; cursor:pointer; font-family:'Roboto',sans-serif; font-size:.9em; font-weight:300; margin:0 20px 0 0; padding:1.1em 3em; text-transform:uppercase; transition:all 250ms ease;}
+    button:hover, .button:hover, .button:focus, button:focus {background-color:#fff; border-color:#005DAC; color:#005dac;}
+    #requestBtn {margin:0 0 40px;}
+    .form-group {align-items:center; display:flex; flex-flow:row wrap; justify-content:space-between; margin-bottom:1rem;}
+    textarea {width:100%;}
+
+    .languageForm {max-width:850px;}
+    .languageForm label {width:100%;}
+    .requestForm, .inquiryForm {border-radius:5px; margin:50px auto; max-width:100%; /*position:absolute;*/ top:0; width:60%;}
+    .requestForm label, .inquiryForm label {flex:1 1 250px; margin:0 10px;}
+    .requestForm fieldset, .inquiryForm fieldset {margin:0 10px;}
+    input, select, textarea {background-color:#fff;border-radius:0; border:1px solid #ccc; -webkit-box-shadow:inset 0px 1px 6px rgba(0,0,0,0.125); box-shadow:inset 0px 1px 6px rgba(0,0,0,0.125); display:block; font-family:inherit; font-size:1em; margin:3px 0 0; padding:5px 10px; width:100%;}
+    .closeRequest, .closeInquiry {cursor:pointer;}
+
+    /* hidden by default */
+    .hide, .modal {display:none;}
+
+    /* Request/Inquiry Display Tables*/
+    #tableRow {width:100%;}
+    #tableRow .table {background:#fff; text-align:center;}
+    #tableRow .table .wrapper {justify-content:center;}
+    #tableRow .url a {color:#2637B0; font-weight:400; text-decoration:none; transition:color .25s ease-in-out;}
+    #tableRow .url a:hover, #tableRow .url a:focus {color:#9E4ADE}
+    #tableRow .arrow .fas.fa-angle-down {border:1px solid #2637B0; color:#2637B0; cursor:pointer;}
+    #tableRow .arrow .fas:hover, #tableRow .arrow .fas:focus, #tableRow .arrow .fas.fa-angle-up {background:#2637B0; border:1px solid #000; color:#fff; cursor:pointer;}
+    /* expanded accordion */
+    #tableRow #accordion .expanded {display:none;	padding:20px 40px; width:100%;}
+    div#accordion p {margin:0;}
+    /* table rows */
+    .row.title {font-weight:500;}
+    .row {border-top:solid 1px #E6E7EF; justify-content:flex-start; margin:0; width:100%;}
+    .row:last-child {border-bottom:solid 1px #E6E7EF;}
+    .row .cell {margin:0; padding:15px; text-align:left;}
+    .row .cell.email {flex-grow:1; text-align:left;}
+    .row .cell.name {width:75%;}
+    .row .cell.status {width:10%;}
+    .row .cell.date {width:10%;}
+    .row .cell.businessUnit {width:175px;}
+    .row .cell.languages {width:175px;}
+    .row .cell.arrow {color:#2637B0; width:5%;}
+
+    .fullCol {width:100%;}
+
+    /* Footer */
+    #footer {background-color:#fff; padding:1px 0; text-align:left;}
+    #footer .container {margin:60px auto 0; max-width:75rem; padding:0 10px;}
+    #footer p {color:#565757 !important; font-family:'Open Sans', sans-serif; font-size:11px; line-height:1.85em; margin:0;}
+    #footer a, #footer .admin_menu {color:#222; font-family:inherit; font-size:11px; font-weight:400; text-decoration:underline; transition:none;}
+    #footer a:hover, #footer a:focus, #footer .admin_menu:hover, #footer .admin_menu:focus {color:intial; text-decoration:none;}
+    #footer a::after {background-color:#fff;}
+    #footer span.label_skin_corporation, footer .admin_menu {font-family:inherit; font-size:inherit;}
+    #footer .admin_menu {font-weight:700; margin:0; text-decoration:none;}
+    #footerWest {border-bottom:1px solid #ccc; display:flex; font-size:14px; margin:0 0 20px; padding:0 0 20px; text-align:left;}
+    #footer .logo {float:left; padding:0 20px 28px 0;}
+    #footer .west-copyright {padding:0;}
+    #footer .footer-bottom {border-top:1px solid #cccccc;	padding:20px 0 1.25em; width:100%;}
+
+    /* top row */
+    #topRow {margin:0 -15px;}
+    #topRow h2 {margin:0; padding:10px; text-align:center;}
+    #topRow .widget {padding:20px 15px;}
+    #topRow  .table {background:#fff;}
+    .subLink {align-items:center; display:flex; justify-content:center;}
+    .circle {align-items:center; border-radius:0; border:1px solid #2637B0; color:#2637B0; display:flex; font-size:1.25em; height:30px; justify-content:center; margin:0 auto; width:auto;}
+    .circle:hover, .circle:focus {background:#2637B0; color:#fff; cursor:pointer;}
+    .showRequests, .showInquiries {cursor:pointer;}
+    .fullCol {width:100%;}
+
+    /* tables*/
+    .table.graph {padding:0 0 25px;}
+    .table .column {width:200px;}
+    .table .column .cell {padding:0 5px; text-align:center; width:100%;}
+    .table .column .cell.build {font-weight:500;}
+
+
+    /* Media Queries */
+    @media screen and (max-width:1400px){
+      .container {max-width:100%; padding:0 20px;}
+    }
+    @media screen and (max-width: 1250px){
+      #content > div.container {flex-wrap:wrap;}
+      #content > div.container > div {flex:1 100% !important;}
+      #content > div.container > div.leftCol {order:1; margin:0;}
+      #content > div.container > div.rightCol {order:2;}
+    }
+    @media screen and (min-width:1024px) {
+      #primaryNavigation {display:block;}
+    }
+    @media screen and (max-width: 1024px){
+      #template div.contentWrapper > div.text {flex-wrap:wrap;}
+      #template div.contentWrapper > div.text > div.text {flex:1 100%; order:2;}
+    }
+    @media screen and (max-width:900px){
+      .row .cell {padding:5px;}
+      .row .cell.status, .row .cell.date {width:15%;}
+      .row .cell.name {width:65%;} 
+    }
+    @media screen and (max-width:768px){
+        div.body > div.rightCol {min-width:100%;}
+    }
+    @media screen and (max-width:650px){
+      body {font-size:.9rem;}
+      h1{ font-size:1.75rem;}
+    }
+    @media screen and (max-width:600px){
+    .row .cell.status, .row .cell.date {width:20%;}
+    .row .cell.name {width:50%;}
+    }
+    @media screen and (max-width:400px){
+      .row .cell.status, .row .cell.date {width:25%;}
+      .row .cell.name {width:35%;}
+    }
+
+  </style>
+
+  <style>
+    button.nobutton {display: inline-block; -webkit-appearance: none; background-color: transparent; border: 0; padding: 0; cursor: pointer;}
+    button.nobutton:hover, button.nobutton:focus {text-decoration: underline;}
+    /* search box */
+    .searchBox {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      width: 250px;
+      padding: 6px 15px;
+    }
+    form.searchBox {
+      box-shadow: none;
+      max-width: none;
+      margin: auto;
+      text-align: left;
+      background: transparent;
+      position: relative;
+    }
+    form.searchBox input {
+      width: 250px;
+      padding: 6px 15px;
+      margin: auto;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 0;
+    }
+    form.searchBox input::placeholder {
+      color: #fff;
+    }
+    form.searchBox button {
+      background-color: transparent;
+      padding: 0;
+      margin: auto;
+      border-radius: 0;
+      display: inline-block;
+      position: absolute;
+      right: 30px;
+      border: none;
+      color: #fff;
+    }
+  </style>
+
+  <div id="content">
+    <div class="container">
+      <div id="tableRow" class="flexbox">
+        <div class="widget fullCol">
+          <h2>Search Results</h2>
+          <div id="dashSubmissions">
+            <% if (submissions.length > 0){ %>
+              <% submissions.forEach(function(submission){ %>
+                <p><strong>Name:</strong> <%= submission.name %></p>
+                <p><strong>Date:</strong> <%= submission.date %></p>
+                <p><strong>Email:</strong> <%= submission.email %></p>
+                <p><strong>Internal Notes:</strong> <%= submission.notes %></p>
+                <a href="/submissions/<%= submission._id %>/edit"><button class="btn edit">See More</button></a>
+                <hr />
+              <% }); %>
+            <% } else { %>
+              <p>No Results Found for <strong><%= searchWord %></strong>.</p>
+                  
+            <% } %>
+          </div><!-- end of dashSubmissions -->
+        </div><!-- end of widget fullCol -->
+      </div><!-- end of tableRow flexbox -->
+    </div><!-- end of content container  --> 
+  </div><!-- end of content --> 
+
+  <script>
+
+    $(document).ready(function () {
+  
+      // list of team members drop down when you click the purple arrow beside your name
+      $('.selectTeamMember .fa-angle-down').click(function() {
+          $('#allTeamMembers').slideToggle();
+      });
+  
+      // when you click on requests circle it shows submitted request tasks
+      $('.showRequests').click(function() {
+        $('#inquiries').hide();
+        $('#requests').fadeIn("slow");
+      });
+      // when you click on inquiries circle it shows submitted inquiry tasks
+      $('.showInquiries').click(function() {
+        $('#requests').hide();
+        $('#inquiries').fadeIn("slow");
+      });
+      // when you click on inquiries circle it shows submitted inquiry tasks
+      $('.showAll').click(function() {
+        $('#inquiries, #requests').fadeIn("slow");
+      })
+      
+      // when you click the  arrow beside a submission it expands for further info
+      $('#accordion .fa-angle-down').click(function() {
+        $(this).parent().next('.expanded').slideToggle();
+        $("#accordion .fa-angle-down").toggleClass("fa-angle-up");
+      });
+
+    });
+
+  </script>
+    
+<% include partials/footer %>

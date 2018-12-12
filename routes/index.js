@@ -23,8 +23,8 @@ var storage = multer.diskStorage({
 });
 var imageFilter = function(req, file, cb) {
   // set acceptable file types
-  if (!file.originalname.match(/\.(pdf|doc|docx|csv|xls|mp3|wav)$/i)) {
-    return cb(new Error("Only pdf, doc, docx, csv, xls, mp3 and wav files are allowed."), false);
+  if (!file.originalname.match(/\.(pdf|doc|docx|csv|xls|txt|mp3|wav)$/i)) {
+    return cb(new Error("Only pdf, doc, docx, csv, xls, mp3, txt, and wav files are allowed."), false);
   }
   cb(null, true);
 };
@@ -340,6 +340,7 @@ router.get("/submissions/:id", ensureAuthenticated, function(req, res) {
 
 //edit submissions route
 router.get("/submissions/:id/edit", ensureAuthenticated, function(req, res) {
+  console.log('--------------------------');
   Submission.findById(req.params.id, function(err, foundSubmission) {
     ActionItems.find({}, function(err, allActionItem) {
       User.find({}, function(err, allUsers) {
@@ -374,18 +375,29 @@ router.get("/submissions/:id/public", function(req, res) {
 
 //update submissions route
 router.put("/submissions/:id", function(req, res){
-  console.log(req.body.submission);
-  //find and update correct submission
-  var actionItem = req.body.actionItem;
-  var intake = req.body.submission;
-  const intakeEdit = Object.assign(intake, actionItem);
-  Submission.findByIdAndUpdate(req.params.id, intakeEdit, function(err, updatedSubmission){
-    if(err){
-      res.redirect("/submissions");
-    } else {
-      req.flash("success", "You have successfully updated the submission");
-      res.redirect("/submissions/" + req.params.id);
-    }
+  Submission.findById(req.params.id, function (err, foundSubmission) {
+    ActionItems.find({}, function(err, allActionItem) {
+      
+      var submitted = { submission:foundSubmission, actionItem:allActionItem };
+      console.log(submitted.actionItem);
+      //Assemble the action item
+      var actionItemNotes = actionItem[actionItemNotes];
+      var actionItemAttachments = actionItem[actionItemAttachments];
+      var newActionItem = { actionItemNotes, actionItemAttachments };
+      
+      //find and update correct submission
+      //var action = req.body.submission;
+      //var intake = req.body.submission;
+      const intakeEdit = Object.assign(submitted, newActionItem);
+      Submission.findByIdAndUpdate(req.params.id, intakeEdit, function(err, updatedSubmission){
+        if(err){
+          res.redirect("/submissions");
+        } else {
+          req.flash("success", "You have successfully updated the submission");
+          res.redirect("/submissions/" + req.params.id);
+        }
+      });
+    });
   });
 });
 

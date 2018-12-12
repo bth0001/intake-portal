@@ -113,7 +113,7 @@ div#accordion p {margin:0;}
 .row:last-child {border-bottom:solid 1px #E6E7EF;}
 .row .cell {margin:0; padding:15px; text-align:left;}
 .actionItemTable .row .cell {padding:2px 15px;}
-.actionItemTable .row .cell.id {padding:10px 15px;}
+.actionItemTable .row .cell.id {padding:10px 15px; vertical-align:top;}
 .row .cell.name {width:75%;}
 .row .cell.status {width:10%;}
 .row .cell.date {width:10%;}
@@ -189,4 +189,9 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
 @media screen and (max-width:650px){body {font-size:.9rem;} h1{ font-size:1.75rem;} .requestForm, .inquiryForm {width:90%;}}
 @media screen and (max-width:600px){.row .cell.status, .row .cell.date {width:20%;} .row .cell.name {width:50%;}}
 @media screen and (max-width:400px){.row .cell.status, .row .cell.date {width:25%;} .row .cell.name {width:35%;} .actionItemTable .header .type {display:none;} .actionItemTable .row {border-bottom:1px solid #484554; padding:15px 0 10px;} .actionItemButtons {justify-content:space-between;} .actionItemButtons button {margin:10px 0 0; padding:8px; width:48%;}}
-@media screen and (min-width: 768px) {.actionItemTable .cell.type {width:200px;} .actionItemTable .cell.notes {text-align:left; width:60%;} .actionItemTable .cell.attachments {text-align:left; width:35%;} .actionItemTable .cell.id {text-align:left; width:5%;}}
+@media screen and (min-width: 768px) {
+  .actionItemTable .cell.type {width:200px;}
+  .actionItemTable .cell.notes {display:inline-block; text-align:left; width:60%;}
+  .actionItemTable .cell.attachments {display:inline-block; text-align:left; vertical-align:top; width:35%;}
+  .actionItemTable .cell.id {display:inline-block; text-align:left; vertical-align:top; width:5%;}
+}

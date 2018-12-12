@@ -250,9 +250,17 @@ router.post("/send-email", function(req, res) {
 });
 
 //POST new Submission
-router.post("/submissions", upload.array('documentation', 10), function(req, res){
+router.post("/submissions", upload.array('attachment[documentation]'), function(req, res){
   //Get Data from form
-  console.log(req.body);
+  console.log('----------------');
+  console.log(req.body.attachment);
+  console.log('----------------');
+  console.log(req.files);
+  console.log('----------------');
+  console.log(req.files.path);
+  console.log('----------------');
+  req.body.attachment.documentation = req.files.path;
+  
   var actionItems = {
     actionItemNotes: req.body.actionItemNotes,
     actionItemAttachments: req.body.actionItemAttachments

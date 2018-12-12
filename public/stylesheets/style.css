@@ -147,6 +147,7 @@ div#accordion p {margin:0;}
 .actionItemTable .header {background:#484554; color:#ada9bb; font-weight:400; padding:5px;}
 .actionItemTable .header .cell {padding:5px 10px;}
 .actionItemTable .row {border-bottom:1px solid #ddd; justify-content:space-between; margin:0; padding:5px 0 0;}
+.newRow {display:none;}
 .actionItemTable .cell {padding:0 10px;}
 .actionItemTable .customSelect {height:57px; position:relative;}
 .actionItemTable input, .actionItemTable textarea, .actionItemTable select {border-bottom:none; margin-bottom:0;}

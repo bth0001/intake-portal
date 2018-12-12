@@ -26,10 +26,6 @@ var submissionSchema = new mongoose.Schema(
     notes: String,
     actionItems: [
       {
-        id: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "ActionItem"
-        },
         actionItemNotes: {
           type: String,
           default: null
@@ -37,21 +33,6 @@ var submissionSchema = new mongoose.Schema(
         actionItemAttachments: {
           type: String,
           default: null
-        }
-      }
-    ],
-    history: [
-      {
-        historyName: {
-          type: String
-        },
-        id: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "ActionItem"
-        },
-        time: {
-          type: Date,
-          default: Date.now
         }
       }
     ]

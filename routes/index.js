@@ -252,32 +252,14 @@ router.post("/send-email", function(req, res) {
 //POST new Submission
 router.post("/submissions", upload.array('documentation', 10), function(req, res){
   //Get Data from form
-  var id = req.body.id;
-  var name = req.body.name;
-  var itemType = req.body.itemType;
-  var status = req.body.status;
-  var date = req.body.date;
-  var email = req.body.email;
-  var businessUnit = req.body.businessUnit;
-  var languages = req.body.languages;
-  var voiceTalent = req.body.voiceTalent;
-  var useSelection = req.body.useSelection;
-  var use = req.body.use;
-  var number = req.body.number;
-  var targetDate = req.body.targetDate;
-  var description = req.body.description;
-
-  req.body.attachment = req.files;
-  var attachment = req.body.attachment;
-  req.body.attachment[documentation] = req.files.path;
-  var documentation = req.body.attachment[documentation];
-
-  var actionItems = req.body.actionItems;
-  var actionItemNotes = req.body.actionItems[actionItemNotes];
-  var actionItemAttachments = req.body.actionItems[actionItemAttachments];
-  
-  var newSubmission = {id: id, name: name, itemType: itemType, status: status, date: date, email: email, businessUnit: businessUnit, languages: languages, voiceTalent: voiceTalent, useSelection: useSelection, use: use, number: number, targetDate: targetDate, description: description, attachment: attachment, documentation: documentation, actionItems: actionItems, actionItemNotes: actionItemNotes, actionItemAttachments: actionItemAttachments};
-  ActionItems.create(newSubmission.actionItems, function(err, newlyActionItem) {
+  console.log(req.body);
+  var actionItems = {
+    actionItemNotes: req.body.actionItemNotes,
+    actionItemAttachments: req.body.actionItemAttachments
+  };
+  var submission = req.body;
+  const newSubmission = Object.assign(submission, { actionItems: actionItems });
+  ActionItems.create(submission.actionItems, function(err, newlyActionItem) {
     Submission.create(newSubmission, function(err, newlySubmitted) {
       if(err) {console.log(err);} else {
         //redirect back to submissions
@@ -292,7 +274,7 @@ router.post("/submissions", upload.array('documentation', 10), function(req, res
           from: 'westvoiceservices@gmail.com',
           to: 'westvoiceservices@gmail.com',
           subject: 'New Voice Service Submission',
-          html: '<h1>Hello ' + name + '!</h1><p>A new Voice Service submission has been received.  Click <a href="http://localhost:3000/submissions/">here</a> to view.</p>'
+          html: '<h1>Hello!</h1><p>A new Voice Service submission has been received.  Click <a href="http://localhost:3000/submissions/">here</a> to view.</p>'
         };
         
         transporter.sendMail(mailOptions, function(error, info){
@@ -376,27 +358,19 @@ router.get("/submissions/:id/public", function(req, res) {
 //update submissions route
 router.put("/submissions/:id", function(req, res){
   Submission.findById(req.params.id, function (err, foundSubmission) {
-    ActionItems.find({}, function(err, allActionItem) {
-      
-      var submitted = { submission:foundSubmission, actionItem:allActionItem };
-      console.log(submitted.actionItem);
-      //Assemble the action item
-      var actionItemNotes = actionItem[actionItemNotes];
-      var actionItemAttachments = actionItem[actionItemAttachments];
-      var newActionItem = { actionItemNotes, actionItemAttachments };
-      
-      //find and update correct submission
-      //var action = req.body.submission;
-      //var intake = req.body.submission;
-      const intakeEdit = Object.assign(submitted, newActionItem);
-      Submission.findByIdAndUpdate(req.params.id, intakeEdit, function(err, updatedSubmission){
-        if(err){
-          res.redirect("/submissions");
-        } else {
-          req.flash("success", "You have successfully updated the submission");
-          res.redirect("/submissions/" + req.params.id);
-        }
-      });
+    //Assemble the action item
+    var newActionItem = { actionItemNotes: req.body.actionItemNotes, actionItemAttachments: req.body.actionItemAttachments };
+    
+    //find and update correct submission
+    var submission = req.body.submission;
+    const intakeEdit = Object.assign(submission, newActionItem);
+    Submission.findByIdAndUpdate(req.params.id, intakeEdit, function(err, updatedSubmission){
+      if(err){
+        res.redirect("/submissions");
+      } else {
+        req.flash("success", "You have successfully updated the submission");
+        res.redirect("/submissions/" + req.params.id);
+      }
     });
   });
 });

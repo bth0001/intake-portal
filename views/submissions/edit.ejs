@@ -245,7 +245,7 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
         <div class="widget fullCol">
           <div id="dashSubmissions">
 
-            <form onsubmit="countActionItems();" class="inquiryForm" enctype="multipart/form-data" action="/submissions/<%= submission._id %>?_method=PUT" method="POST" style="width:100%">
+            <form onsubmit="" class="inquiryForm" action="/submissions/<%= submission._id %>?_method=PUT" method="POST" style="width:100%">
               <p><i class="fas fa-arrow-left"></i> <a href="javascript:history.back()"> back</a></p>
               <div class="formTitle">Edit Submission from <%= submission.name %></div>
               <div class="form-group">
@@ -355,30 +355,38 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
                     <div class="cell id">ID</div>
                   </div>
                   
+                  
                   <% for (i=0; i < submission.actionItems.length; i++) { %>
 
                     <% var actionItemsCount = submission.actionItems.length - 1; %>
                     <% actionItemsCount++ %>
 
                     <div class="actionItem flexbox row">
-                      <div class="cell notes"><%= submission.actionItems[i].actionItemNotes %></div>
-                      <div class="cell attachments"><%= submission.actionItems[i].actionItemAttachments %></div>
-                      <div class="cell id"><%= actionItemsCount %></div>
-                    </div>
-                    
-                    <div class="actionItem flexbox row newRow">
                       <div class="cell notes">
-                        <textarea type="text" name="actionItemNotes" maxlength="1000" ></textarea>
+                        <input type="hidden" value="<%= submission.actionItems[i].actionItemNotes %>" name="submission[actionItems][<%=i%>][actionItemNotes]" />
+                        <%= submission.actionItems[i].actionItemNotes %>
                       </div>
                       <div class="cell attachments">
-                        <input type="file" name="actionItemAttachments" maxlength="1000" multiple />
+                        <input type="hidden" value="<%= submission.actionItems[i].actionItemAttachments %>" name="submission[actionItems][<%=i%>][actionItemAttachments]" />
+                        <%= submission.actionItems[i].actionItemAttachments %></div>
+                      <div class="cell id"><%= actionItemsCount %></div>
+                    </div>
+                  <% } %>
+
+                  <div class="actionItem flexbox row newRow">
+                      <div class="cell notes">
+                        <textarea type="text" name="submission[actionItems][<%=submission.actionItems.length%>][actionItemNotes]" maxlength="1000" ></textarea>
+                      </div>
+                      <div class="cell attachments">
+                        <input type="file" name="submission[actionItems][<%=submission.actionItems.length%>][actionItemAttachments]" maxlength="1000" multiple />
                       </div>
                       <div class="cell id">
                         <%= actionItemsCount + 1 %>
                       </div>
                     </div>
-                      
-                  <% } %>
+                  
+
+
 
                 </div><!-- end of actionItemTable -->
                 <div class="actionItemButtons flexbox flexRight">
@@ -409,16 +417,5 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
     </div><!-- end of content container  --> 
   </div><!-- end of content --> 
 
-  <script>
-    //Counts action items on form submit
-    function countActionItems(){
-      var count = 0;
-      $("div.actionItem").each(function(){
-        $(this).find(".actionItemNotes").attr("name", "submission.actionItems[" + count + "].actionItemNotes");
-        $(this).find(".actionItemAttachments").attr("name", "submission.actionItems[" + count + "].actionItemAttachments");
-        count++;
-      });
-    }
-  </script>
 
 <% include ../partials/footer %>

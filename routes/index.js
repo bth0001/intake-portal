@@ -367,12 +367,10 @@ router.get("/submissions/:id/public", function(req, res) {
 router.put("/submissions/:id", function(req, res){
   Submission.findById(req.params.id, function (err, foundSubmission) {
     //Assemble the action item
-    var newActionItem = { actionItemNotes: req.body.actionItemNotes, actionItemAttachments: req.body.actionItemAttachments };
-    
+    const {submission} = req.body;
+    console.log(submission);
     //find and update correct submission
-    var submission = req.body.submission;
-    const intakeEdit = Object.assign(submission, newActionItem);
-    Submission.findByIdAndUpdate(req.params.id, intakeEdit, function(err, updatedSubmission){
+    Submission.findByIdAndUpdate(req.params.id, submission, function(err, updatedSubmission){
       if(err){
         res.redirect("/submissions");
       } else {

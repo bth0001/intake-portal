@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var expressValidator = require('express-validator');
 var flash = require("connect-flash");
 var session = require("express-session");
-var logger = require('morgan');
 var passport = require("passport");
 var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
@@ -27,8 +26,6 @@ mongoose.connect("mongodb://admin:voiceadmin1@ds018268.mlab.com:18268/voice-serv
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.set('debug', true);
-app.use(logger('dev'));
 app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

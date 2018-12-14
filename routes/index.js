@@ -254,6 +254,8 @@ router.post("/submissions", upload.array('attachment'), function(req, res){
   req.files.map((attachment) => {
     newDoc.push(attachment.path);
   })
+console.log("--------------------");
+console.log(newDoc);
 
   var actionItems = {
     actionItemNotes: req.body.actionItemNotes,
@@ -357,24 +359,29 @@ router.get("/submissions/:id/public", function(req, res) {
 });
 
 //update submissions route
-router.put("/submissions/:id", upload.array('actionItems[actionItemAttachments]'), function(req, res){
+router.put("/submissions/:id", upload.array('attachments'), function(req, res){
   Submission.findById(req.params.id, function (err, foundSubmission) {
-
-    var newDoc = [];
-
-    req.files.map((actionItems[actionItemAttachments]) => {
-      newDoc.push(actionItems[actionItemAttachments].path);
-    })
-
-    
-    //Assemble the action item
     const {submission} = req.body;
-    console.log(submission);
-
-    const updatedSubmission = {submission, attachments: newDoc}
-
-    //find and update correct submission
-    Submission.findByIdAndUpdate(req.params.id, updatedSubmission, function(err, updatedSubmission){
+    // //Assemble the action item
+    var newDoc = [],
+      existingActionItems = [];
+    for (i=0;i<foundSubmission.actionItems.length;i++){
+      existingActionItems.push(foundSubmission.actionItems[i]);
+    }
+    req.files.map((attachments) => {
+      newDoc.push(attachments.path);
+    });
+    // console.log(existingActionItems);
+    const newAttachment = Object.assign({
+      actionItemNotes: req.body.actionItemNotes,
+      actionItemAttachments: newDoc
+    });
+    existingActionItems.push(newAttachment);
+    var updatedSub = Object.assign(foundSubmission, {
+      actionItems: existingActionItems
+    });
+    // find and update correct submission
+    Submission.findByIdAndUpdate(req.params.id, updatedSub, function(err, updatedSubmission){
       if(err){
         res.redirect("/submissions");
       } else {
@@ -382,7 +389,7 @@ router.put("/submissions/:id", upload.array('actionItems[actionItemAttachments]'
         res.redirect("/submissions/" + req.params.id);
       }
     });
-  });
+  })
 });
 
 //Register form route

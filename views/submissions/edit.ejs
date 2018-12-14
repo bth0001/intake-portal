@@ -248,7 +248,7 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
         <div class="widget fullCol">
           <div id="dashSubmissions">
 
-            <form onsubmit="" class="inquiryForm" action="/submissions/<%= submission._id %>?_method=PUT" method="POST" style="width:100%">
+            <form onsubmit="" class="inquiryForm" action="/submissions/<%= submission._id %>?_method=PUT" method="POST" style="width:100%" enctype="multipart/form-data">
               <p><i class="fas fa-arrow-left"></i> <a href="javascript:history.back()"> back</a></p>
               <div class="formTitle">Edit Submission from <%= submission.name %></div>
               <div class="form-group">
@@ -364,11 +364,9 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
                     <% actionItemsCount++ %>
                     <div class="actionItem flexbox row">
                       <div class="cell notes">
-                        <input type="hidden" value="<%= submission.actionItems[i].actionItemNotes %>" name="submission[actionItems][<%=i%>][actionItemNotes]" />
                         <%= submission.actionItems[i].actionItemNotes %>
                       </div>
                       <div class="cell attachments">
-                          <input type="hidden" value="<%= submission.actionItems[i].actionItemAttachments %>" name="submission[actionItems][<%=i%>][actionItemAttachments]" />
                           <em><a href="/uploads/<%= submission.actionItems[i].actionItemAttachments %>"><%= submission.actionItems[i].actionItemAttachments %></a></em>
                       </div>
                         <div class="cell id"><% submission.actionItems[i]++; %></div>
@@ -378,7 +376,7 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
                   
                   <div class="actionItem flexbox row newRow">
                       <div class="cell notes">
-                        <textarea type="text" name="submission[actionItems][<%=submission.actionItems.length%>][actionItemNotes]" maxlength="1000" required></textarea>
+                        <textarea type="text" name="actionItemNotes" maxlength="1000" required></textarea>
                       </div>
                       <div class="cell attachments">
                         <input type="file" name="attachments" maxlength="1000" multiple required/>

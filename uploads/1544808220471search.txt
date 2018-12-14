@@ -1,0 +1,15 @@
+{
+    "author.firstName": "text",
+    "buildPkg": "text",
+    "starterTemplate": "text",
+    "specialFeatures": "text",
+    "cssPath": "text",
+    "date": "text",
+    "acctNum": "text",
+    "designer": "text",
+    "onboarder": "text",
+    "domain": "text",
+    "taskTypes.taskTypeName": "text",
+    "taskTypes.taskNotes": "text",
+    "notes": "text"
+}

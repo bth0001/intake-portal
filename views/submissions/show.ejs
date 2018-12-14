@@ -83,7 +83,13 @@
                     <% actionItemsCount++ %>
                     <div class="actionItem flexbox row">
                       <div class="cell notes"><%= submission.actionItems[i].actionItemNotes %></div>
-                      <div class="cell attachments"><%= submission.actionItems[i].actionItemAttachments %></div>
+                      <div class="cell attachments">
+                        <% if(submission.actionItems[i].actionItemAttachments.length){ %>
+                          <% for(var n=0;n<submission.actionItems[i].actionItemAttachments.length;n++){ %>
+                            <strong><%= submission.actionItems[i].actionItemAttachments[n] %></strong><br />
+                          <% } %>
+                        <% } %>
+                      </div>
                       <div class="cell id"><%= actionItemsCount + 1 %></div>
                     </div>
                   <% } %>

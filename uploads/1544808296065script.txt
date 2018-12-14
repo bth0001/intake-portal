@@ -1,0 +1,46 @@
+
+	<script>
+			$(document).ready(function(){
+				
+				var commentid;
+				$("#userProjects div.project a[data-recentcommentstoggle]").on("click", function(){
+					var data = $(this).attr("data-recentcommentstoggle");
+					$("#userProjects .recentComments").each(function(){
+						if(data === $(this).attr("data-recentcomments")){
+							$(this).slideToggle("slow").toggleClass("open");
+						} else {
+							$(this).slideUp("slow").removeClass("open");
+						}
+					});
+				});
+				$("#userProjects div.project a.comment").on("click", function(){
+					$("<input type='text' autocomplete='off' class='quickComment' onfocusout='this.remove()' name='comment[text]' />").insertBefore($(this));
+					commentid = $(this).attr("data-id");
+					$(".quickComment").focus();
+				});
+				$("#userProjects").on("keyup", "input", function (e) {
+				var elem = $(this);
+					if (elem.is("[class='quickComment']")) {
+						if(e.keyCode == 13)  {
+							var comment = elem.val().toString();
+							var projectID = elem.parents(".project").attr("data-projectid");
+							$.ajax({
+								statusCode: {
+									url: "/api/project-comments/new",
+									type: 'post',
+									data: {
+										projectComment: comment,
+										projectIDNum: projectID
+									},
+									success: function(data) {
+										console.log(data)
+									}
+								}
+							});
+						}
+					}
+				});
+				
+					
+			});
+		</script>

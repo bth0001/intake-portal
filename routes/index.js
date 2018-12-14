@@ -59,7 +59,6 @@ router.get("/search", function(req, res){
           array.splice(searchIndex, 1);
           req.session.searchHistory.unshift(req.query.search);
         }
-        console.log(req.session);
         res.render("search-results", {
           title: 'Voice Service Intake Portal',
           submissions : allSubmissions,
@@ -224,11 +223,9 @@ router.post("/send-email", function(req, res) {
   var id = req.body.mainid;
   var clientEmail = req.body.clientEmail;
   var clientName = req.body.clientName;
-  console.log(id);
-  console.log(clientEmail);
-    res.render("email-success", { 
-      title: 'Voice Service Intake Portal'
-    });
+  res.render("email-success", { 
+    title: 'Voice Service Intake Portal'
+  });
 
   var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -250,23 +247,21 @@ router.post("/send-email", function(req, res) {
 });
 
 //POST new Submission
-router.post("/submissions", upload.array('attachment[documentation]'), function(req, res){
+router.post("/submissions", upload.array('attachment'), function(req, res){
   //Get Data from form
-  console.log('----------------');
-  console.log(req.body.attachment);
-  console.log('----------------');
-  console.log(req.files);
-  console.log('----------------');
-  console.log(req.files.path);
-  console.log('----------------');
-  req.body.attachment.documentation = req.files.path;
-  
+  var newDoc = [];
+
+  req.files.map((attachment) => {
+    newDoc.push(attachment.path);
+  })
+
   var actionItems = {
     actionItemNotes: req.body.actionItemNotes,
     actionItemAttachments: req.body.actionItemAttachments
   };
+
   var submission = req.body;
-  const newSubmission = Object.assign(submission, { actionItems: actionItems });
+  const newSubmission = Object.assign(submission, { actionItems: actionItems, attachment: newDoc });
   ActionItems.create(submission.actionItems, function(err, newlyActionItem) {
     Submission.create(newSubmission, function(err, newlySubmitted) {
       if(err) {console.log(err);} else {
@@ -313,7 +308,6 @@ router.get("/submissions/:id", ensureAuthenticated, function(req, res) {
         if(err) {
           console.log(err);
         } else {
-          //console.log(foundSubmission);
           //render show template
           res.render("submissions/show", {
             title: 'Voice Service Intake Portal',
@@ -330,7 +324,6 @@ router.get("/submissions/:id", ensureAuthenticated, function(req, res) {
 
 //edit submissions route
 router.get("/submissions/:id/edit", ensureAuthenticated, function(req, res) {
-  console.log('--------------------------');
   Submission.findById(req.params.id, function(err, foundSubmission) {
     ActionItems.find({}, function(err, allActionItem) {
       User.find({}, function(err, allUsers) {
@@ -364,13 +357,24 @@ router.get("/submissions/:id/public", function(req, res) {
 });
 
 //update submissions route
-router.put("/submissions/:id", function(req, res){
+router.put("/submissions/:id", upload.array('actionItems[actionItemAttachments]'), function(req, res){
   Submission.findById(req.params.id, function (err, foundSubmission) {
+
+    var newDoc = [];
+
+    req.files.map((actionItems[actionItemAttachments]) => {
+      newDoc.push(actionItems[actionItemAttachments].path);
+    })
+
+    
     //Assemble the action item
     const {submission} = req.body;
     console.log(submission);
+
+    const updatedSubmission = {submission, attachments: newDoc}
+
     //find and update correct submission
-    Submission.findByIdAndUpdate(req.params.id, submission, function(err, updatedSubmission){
+    Submission.findByIdAndUpdate(req.params.id, updatedSubmission, function(err, updatedSubmission){
       if(err){
         res.redirect("/submissions");
       } else {
@@ -432,7 +436,6 @@ router.post("/signup", function(req, res){
 
           User.createUser(newUser, function(err, user){
             if(err) throw err;
-            console.log(user);
           });
 
           req.flash('success', 'You have signed up successfuly and can now log in!');

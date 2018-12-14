@@ -84,7 +84,7 @@
                                 <div class="cell description"><strong>Additional information/comments/questions:</strong><br /><em><%= submission.description %></em></div>
                                 <div class="cell attachment"><strong>Supporting documentation:</strong><br />
                                   <%	for(var i = 0; i < submission.attachment.length; i++){ %>
-                                    <p><em><a href="/<%= submission.attachment[i].documentation %>"><%= submission.attachment[i].documentation %></a></em></p>
+                                    <p><em><a href="/<%= submission.attachment[i] %>"><%= submission.attachment[i] %></a></em></p>
                                   <% } %>
                                 </div>
 
@@ -129,7 +129,7 @@
                                 <div class="cell description"><strong>Additional information/comments/questions:</strong><br /><em><%= submission.description %></em></div>
                                 <div class="cell attachment"><strong>Supporting documentation:</strong><br />
                                   <% for(var i = 0; i < submission.attachment.length; i++){ %>
-                                    <p><em><a href="/<%= submission.attachment[i].documentation %>"><%= submission.attachment[i].documentation %></a></em></p>
+                                    <p><em><a href="/<%= submission.attachment[i] %>"><%= submission.attachment[i] %></a></em></p>
                                   <% } %>
                                 </div>
 

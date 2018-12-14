@@ -130,6 +130,7 @@ div#accordion p {margin:0;}
 .row {border-top:solid 1px #E6E7EF; justify-content:flex-start; margin:0; width:100%;}
 .row:last-child {border-bottom:solid 1px #E6E7EF;}
 .row .cell {margin:0; padding:15px; text-align:left;}
+.actionItemTable .row:first-child {display:none;}
 .actionItemTable .row .cell {padding:2px 15px;}
 .actionItemTable .row .cell.id {padding:10px 15px; vertical-align:top;}
 .row .cell.name {width:75%;}
@@ -166,6 +167,7 @@ div#accordion p {margin:0;}
 .actionItemTable .header .cell {padding:5px 10px;}
 .actionItemTable .row {border-bottom:1px solid #ddd; justify-content:space-between; margin:0; padding:5px 0 0;}
 .newRow {display:none;}
+.newRow .actionItemTable .cell.notes {width:59%;}
 .actionItemTable .cell {padding:0 10px;}
 .actionItemTable .customSelect {height:57px; position:relative;}
 .actionItemTable input, .actionItemTable textarea, .actionItemTable select {border-bottom:none; margin-bottom:0;}
@@ -211,6 +213,7 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
 @media screen and (min-width: 768px) {
   .actionItemTable .cell.type {width:200px;}
   .actionItemTable .cell.notes {display:inline-block; text-align:left; width:60%;}
+  .actionItemTable .newRow .cell.notes {width:59%;}
   .actionItemTable .cell.attachments {display:inline-block; text-align:left; vertical-align:top; width:35%;}
   .actionItemTable .cell.id {display:inline-block; text-align:left; vertical-align:top; width:5%;}
 }
@@ -314,8 +317,8 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
               </div>
               <div class="form-group documentation">
                 <label name="documentation"><strong>Supporting documentation:</strong>
-                  <%	for(var i = 0; i < submission.attachment.length; i++){ %>
-                    <p><em><a href="/<%= submission.attachment[i].documentation %>"><%= submission.attachment[i].documentation %></a></em></p>
+                  <% for(var i = 0; i < submission.attachment.length; i++){ %>
+                    <p><em><a href="/<%= submission.attachment[i] %>"><%= submission.attachment[i] %></a></em></p>
                   <% } %>
                 </label>
               </div><!-- end of form-group -->
@@ -355,39 +358,36 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
                     <div class="cell id">ID</div>
                   </div>
                   
-                  
                   <% for (i=0; i < submission.actionItems.length; i++) { %>
 
-                    <% var actionItemsCount = submission.actionItems.length - 1; %>
+                    <% var actionItemsCount = submission.actionItems.length -2; %>
                     <% actionItemsCount++ %>
-
                     <div class="actionItem flexbox row">
                       <div class="cell notes">
                         <input type="hidden" value="<%= submission.actionItems[i].actionItemNotes %>" name="submission[actionItems][<%=i%>][actionItemNotes]" />
                         <%= submission.actionItems[i].actionItemNotes %>
                       </div>
                       <div class="cell attachments">
-                        <input type="hidden" value="<%= submission.actionItems[i].actionItemAttachments %>" name="submission[actionItems][<%=i%>][actionItemAttachments]" />
-                        <%= submission.actionItems[i].actionItemAttachments %></div>
-                      <div class="cell id"><%= actionItemsCount %></div>
+                          <input type="hidden" value="<%= submission.actionItems[i].actionItemAttachments %>" name="submission[actionItems][<%=i%>][actionItemAttachments]" />
+                          <em><a href="/uploads/<%= submission.actionItems[i].actionItemAttachments %>"><%= submission.actionItems[i].actionItemAttachments %></a></em>
+                      </div>
+                        <div class="cell id"><% submission.actionItems[i]++; %></div>
                     </div>
-                  <% } %>
 
+                  <% } %>
+                  
                   <div class="actionItem flexbox row newRow">
                       <div class="cell notes">
-                        <textarea type="text" name="submission[actionItems][<%=submission.actionItems.length%>][actionItemNotes]" maxlength="1000" ></textarea>
+                        <textarea type="text" name="submission[actionItems][<%=submission.actionItems.length%>][actionItemNotes]" maxlength="1000" required></textarea>
                       </div>
                       <div class="cell attachments">
-                        <input type="file" name="submission[actionItems][<%=submission.actionItems.length%>][actionItemAttachments]" maxlength="1000" multiple />
+                        <input type="file" name="attachments" maxlength="1000" multiple required/>
                       </div>
                       <div class="cell id">
                         <%= actionItemsCount + 1 %>
                       </div>
                     </div>
                   
-
-
-
                 </div><!-- end of actionItemTable -->
                 <div class="actionItemButtons flexbox flexRight">
                   <button type="button" id="addActionItem">Add <i class="fas fa-plus"></i></button>

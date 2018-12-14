@@ -9,7 +9,10 @@ var submissionSchema = new mongoose.Schema(
     email: String,
     businessUnit: String,
     languages: String,
-    voiceTalent: String,
+    voiceTalent: { 
+      type:String,
+      default: null
+    },
     useSelection: String,
     use: String,
     number: String,
@@ -17,11 +20,9 @@ var submissionSchema = new mongoose.Schema(
     description: String,
     attachment: [
       { 
-        documentation: { 
-          type:String,
-          default: null
-        } 
-      }
+        type:String,
+        default: null
+      } 
     ],
     notes: String,
     actionItems: [
@@ -30,10 +31,16 @@ var submissionSchema = new mongoose.Schema(
           type: String,
           default: null
         },
-        actionItemAttachments: {
-          type: String,
-          default: null
-        }
+        actionItemAttachments: [
+          {
+            type: String,
+            default: null
+          }
+        ],
+        actionItemCount: {
+          type: Number,
+          default: 1
+        },
       }
     ]
   },

@@ -248,7 +248,7 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
         <div class="widget fullCol">
           <div id="dashSubmissions">
 
-            <form onsubmit="" class="inquiryForm" action="/submissions/<%= submission._id %>?_method=PUT" method="POST" style="width:100%">
+            <form onsubmit="" enctype="multipart/form-data" class="inquiryForm" action="/submissions/<%= submission._id %>?_method=PUT" method="POST" style="width:100%">
               <p><i class="fas fa-arrow-left"></i> <a href="javascript:history.back()"> back</a></p>
               <div class="formTitle">Edit Submission from <%= submission.name %></div>
               <div class="form-group">
@@ -358,10 +358,10 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
                     <div class="cell id">ID</div>
                   </div>
                   
+
+                  
                   <% for (i=0; i < submission.actionItems.length; i++) { %>
 
-                    <% var actionItemsCount = submission.actionItems.length -2; %>
-                    <% actionItemsCount++ %>
                     <div class="actionItem flexbox row">
                       <div class="cell notes">
                         <input type="hidden" value="<%= submission.actionItems[i].actionItemNotes %>" name="submission[actionItems][<%=i%>][actionItemNotes]" />
@@ -371,20 +371,23 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
                           <input type="hidden" value="<%= submission.actionItems[i].actionItemAttachments %>" name="submission[actionItems][<%=i%>][actionItemAttachments]" />
                           <em><a href="/uploads/<%= submission.actionItems[i].actionItemAttachments %>"><%= submission.actionItems[i].actionItemAttachments %></a></em>
                       </div>
-                        <div class="cell id"><% submission.actionItems[i]++; %></div>
+                      <div class="cell id">
+                        <input type="hidden" value="<%= submission.actionItems[i].actionItemCount %>" name="submission[actionItems][<%=i%>][actionItemCount]" />
+                        <%= submission.actionItems[i].toString(); %>
+                      </div>
                     </div>
 
                   <% } %>
                   
                   <div class="actionItem flexbox row newRow">
                       <div class="cell notes">
-                        <textarea type="text" name="submission[actionItems][<%=submission.actionItems.length%>][actionItemNotes]" maxlength="1000" required></textarea>
+                        <textarea type="text" name="submission[actionItems][<%=submission.actionItems.length%>][actionItemNotes]" maxlength="1000" ></textarea>
                       </div>
                       <div class="cell attachments">
-                        <input type="file" name="attachments" maxlength="1000" multiple required/>
+                        <input type="file" name="submission[actionItems][<%=submission.actionItems.length%>][actionItemAttachments]" maxlength="1000" multiple />
                       </div>
                       <div class="cell id">
-                        <%= actionItemsCount + 1 %>
+                        <input type="hidden" name="submission[actionItems][<%=submission.actionItems.length%>].toString();" maxlength="1000" multiple />
                       </div>
                     </div>
                   

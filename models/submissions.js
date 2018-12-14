@@ -39,7 +39,7 @@ var submissionSchema = new mongoose.Schema(
         ],
         actionItemCount: {
           type: Number,
-          default: 1
+          default: 0
         },
       }
     ]

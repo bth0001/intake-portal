@@ -83,8 +83,8 @@
                     <% actionItemsCount++ %>
                     <div class="actionItem flexbox row">
                       <div class="cell notes"><%= submission.actionItems[i].actionItemNotes %></div>
-                      <div class="cell attachments"><%= submission.actionItems[i].actionItemAttachments %></div>
-                      <div class="cell id"><%= actionItemsCount + 1 %></div>
+                      <div class="cell attachments"><em><a href="/uploads/<%= submission.actionItems[i].actionItemAttachments %>"><%= submission.actionItems[i].actionItemAttachments %></a></em></div>
+                      <div class="cell id"><%= submission.actionItems[i].actionItemCount %></div>
                     </div>
                   <% } %>
                 </div><!-- end of form-group -->

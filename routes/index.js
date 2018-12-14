@@ -357,24 +357,15 @@ router.get("/submissions/:id/public", function(req, res) {
 });
 
 //update submissions route
-router.put("/submissions/:id", upload.array('actionItems[actionItemAttachments]'), function(req, res){
+router.put("/submissions/:id", function(req, res){
   Submission.findById(req.params.id, function (err, foundSubmission) {
-
-    var newDoc = [];
-
-    req.files.map((actionItems[actionItemAttachments]) => {
-      newDoc.push(actionItems[actionItemAttachments].path);
-    })
 
     
     //Assemble the action item
     const {submission} = req.body;
     console.log(submission);
-
-    const updatedSubmission = {submission, attachments: newDoc}
-
     //find and update correct submission
-    Submission.findByIdAndUpdate(req.params.id, updatedSubmission, function(err, updatedSubmission){
+    Submission.findByIdAndUpdate(req.params.id, submission, function(err, updatedSubmission){
       if(err){
         res.redirect("/submissions");
       } else {

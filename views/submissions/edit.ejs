@@ -166,7 +166,7 @@ div#accordion p {margin:0;}
 .actionItemTable .header {background:#484554; color:#ada9bb; font-weight:400; padding:5px;}
 .actionItemTable .header .cell {padding:5px 10px;}
 .actionItemTable .row {border-bottom:1px solid #ddd; justify-content:space-between; margin:0; padding:5px 0 0;}
-.newRow {display:none;}
+.newRow, .updateBtn {display:none;}
 .newRow .actionItemTable .cell.notes {width:59%;}
 .actionItemTable .cell {padding:0 10px;}
 .actionItemTable .customSelect {height:57px; position:relative;}
@@ -248,7 +248,7 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
         <div class="widget fullCol">
           <div id="dashSubmissions">
 
-            <form onsubmit="" enctype="multipart/form-data" class="inquiryForm" action="/submissions/<%= submission._id %>?_method=PUT" method="POST" style="width:100%">
+            <form onsubmit="" class="inquiryForm" action="/submissions/<%= submission._id %>?_method=PUT" method="POST" style="width:100%" enctype="multipart/form-data">
               <p><i class="fas fa-arrow-left"></i> <a href="javascript:history.back()"> back</a></p>
               <div class="formTitle">Edit Submission from <%= submission.name %></div>
               <div class="form-group">
@@ -325,12 +325,13 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
 
               <script>
                 $(document).ready(function(){
-                  //var count = (submission.actionItems.length + 1);
+                  //var count = (submission.actionItems.length + 1);
                  
-                  $("#addActionItem").click(function () {
+                  $("#addActionItem").click(function () {
                     $(this).remove();
                     $('.newRow').css({'display': 'block'});
                     $('.newRow').appendTo(".actionItemTable");
+                    $('.updateBtn').css({'display': 'inline-block'});
                   });
 
                   // Get the email modal
@@ -358,38 +359,44 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
                     <div class="cell id">ID</div>
                   </div>
                   
-
-                  
                   <% for (i=0; i < submission.actionItems.length; i++) { %>
 
+                    <% var actionItemsCount = -1; %>
+                    
                     <div class="actionItem flexbox row">
                       <div class="cell notes">
-                        <input type="hidden" value="<%= submission.actionItems[i].actionItemNotes %>" name="submission[actionItems][<%=i%>][actionItemNotes]" />
                         <%= submission.actionItems[i].actionItemNotes %>
                       </div>
                       <div class="cell attachments">
-                          <input type="hidden" value="<%= submission.actionItems[i].actionItemAttachments %>" name="submission[actionItems][<%=i%>][actionItemAttachments]" />
-                          <em><a href="/uploads/<%= submission.actionItems[i].actionItemAttachments %>"><%= submission.actionItems[i].actionItemAttachments %></a></em>
+                        <% if(submission.actionItems[i].actionItemAttachments.length){ %>
+                          <% for(var n=0; n < submission.actionItems[i].actionItemAttachments.length; n++){ %>
+                            <em><a href="<%= submission.actionItems[i].actionItemAttachments[n] %> %>"><%= submission.actionItems[i].actionItemAttachments[n] %></a></em><br />
+                          <% } %>
+                        <% } %>
                       </div>
                       <div class="cell id">
-                        <input type="hidden" value="<%= submission.actionItems[i].actionItemCount %>" name="submission[actionItems][<%=i%>][actionItemCount]" />
-                        <%= submission.actionItems[i].toString(); %>
+                        <% var action = submission.actionItems; %>
+                        <% action.forEach(function(action, index, arr) { %>
+                          <strong><%= actionItemsCount + 1 %></strong>
+                          <% console.log(actionItemsCount++); %>
+                        <% }) %>
+                       
                       </div>
                     </div>
 
                   <% } %>
                   
                   <div class="actionItem flexbox row newRow">
-                      <div class="cell notes">
-                        <textarea type="text" name="submission[actionItems][<%=submission.actionItems.length%>][actionItemNotes]" maxlength="1000" ></textarea>
-                      </div>
-                      <div class="cell attachments">
-                        <input type="file" name="submission[actionItems][<%=submission.actionItems.length%>][actionItemAttachments]" maxlength="1000" multiple />
-                      </div>
-                      <div class="cell id">
-                        <input type="hidden" name="submission[actionItems][<%=submission.actionItems.length%>].toString();" maxlength="1000" multiple />
-                      </div>
+                    <div class="cell notes">
+                      <textarea type="text" name="actionItemNotes" maxlength="1000" required></textarea>
                     </div>
+                    <div class="cell attachments">
+                      <input type="file" name="attachments" maxlength="1000" multiple/>
+                    </div>
+                    <div class="cell id">
+                      <%= actionItemsCount + 1 %>
+                    </div>
+                  </div>
                   
                 </div><!-- end of actionItemTable -->
                 <div class="actionItemButtons flexbox flexRight">
@@ -398,7 +405,7 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
               </div><!-- end actionItem -->
               
               <button type="button" id="actionItemEmail">Email to client <i class="fas fa-envelope"></i></button>
-              <button type="submit">Update Submission</button>
+              <button type="submit" class="updateBtn">Update Submission</button>
 
             </form><!-- End Inquiry Form -->
             

@@ -83,8 +83,16 @@
                     <% actionItemsCount++ %>
                     <div class="actionItem flexbox row">
                       <div class="cell notes"><%= submission.actionItems[i].actionItemNotes %></div>
-                      <div class="cell attachments"><em><a href="/uploads/<%= submission.actionItems[i].actionItemAttachments %>"><%= submission.actionItems[i].actionItemAttachments %></a></em></div>
-                      <div class="cell id"><%= submission.actionItems[i].actionItemCount %></div>
+                      <div class="cell attachments">
+                        <% if(submission.actionItems[i].actionItemAttachments.length){ %>
+                          <% for(var n=0;n<submission.actionItems[i].actionItemAttachments.length;n++){ %>
+                            <a href="<%= submission.actionItems[i].actionItemAttachments[n] %>"><em><%= submission.actionItems[i].actionItemAttachments[n] %></em></a><br />
+                          <% } %>
+                        <% } %>
+                      </div>
+                      <div class="cell id">
+                          <!--<%= submission.actionItems[i].actionItemCount %>-->
+                      </div>
                     </div>
                   <% } %>
                 </div><!-- end of form-group -->
@@ -95,12 +103,15 @@
             </form><!-- End Inquiry Form -->
 
             <div id="emailModal">
-              <form onsubmit="countActionItems();" class="emailForm"  action="/send-email" method="put">
-                <div class="form-exit"> <span class="closeEmail">&times;</span></div>
-                <p>Are you sure you want to send this email?</p>
-                <button type="submit" id="actionItemEmail">Send email <i class="fas fa-envelope"></i></button>
-              </form>
-            </div>
+                <form class="emailForm"  action="/send-email" method="post">
+                  <div class="form-exit"><span class="closeEmail">&times;</span></div>
+                  <p>Are you sure you want to send this email?</p>
+                  <input type="hidden" name="mainid" value="<%= submission.id %>" />
+                  <input type="hidden" name="clientEmail" value="<%= submission.email %>" />
+                  <input type="hidden" name="clientName" value="<%= submission.name %>" />
+                  <button type="submit" id="actionItemEmail">Send email <i class="fas fa-envelope"></i></button>
+                </form>
+              </div>
 
           </div><!-- end of dashSubmissions -->
         </div><!-- end of widget fullCol -->

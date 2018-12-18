@@ -1,0 +1,18 @@
+O:\y\yoritaortho.com\Presence - Essentials\copywriter
+
+Client Username: yoritaortho
+Client Password: Baya&875
+Client Email: info@yoritaortho.com
+
+============================================================
+
+mongodb://brad:Bees123@ds263791.mlab.com:63791/webteam-super-site
+
+mongodb://chase123:chase123@ds121982.mlab.com:21982/testforsupersite
+
+====================================
+
+
+Can you clarify the difference in a sandbox site versus a Custom project. The documentation mentions that you build the site first within the sandbox site. Does this sandbox site turn into the actual client site once it is checked?
+
+Also in regards to the sandbox sites, once approved, will we have to move our code to another domain? Assuming that these sandbox sites are temporary, will we have to reset the site back to its default so that another developer can use it? Also if they are temporary, can we bypass the use of a sandbox site and jump straight to building it on the clients domain?

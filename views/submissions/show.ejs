@@ -80,7 +80,7 @@
                   </div>
                   <% for (i=0; i < submission.actionItems.length; i++) { %>
                     <% var actionItemsCount = -1; %>
-                    <% actionItemsCount++ %>
+                    
                     <div class="actionItem flexbox row">
                       <div class="cell notes"><%= submission.actionItems[i].actionItemNotes %></div>
                       <div class="cell attachments">
@@ -91,7 +91,11 @@
                         <% } %>
                       </div>
                       <div class="cell id">
-                          <!--<%= submission.actionItems[i].actionItemCount %>-->
+                        <% var action = submission.actionItems; %>
+                        <% action.forEach(function(action, index, arr) { %>
+                          <strong><%= actionItemsCount + 1 %></strong>
+                          <% console.log(actionItemsCount++); %>
+                        <% }) %>
                       </div>
                     </div>
                   <% } %>

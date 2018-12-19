@@ -325,8 +325,9 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
 
               <script>
                 $(document).ready(function(){
-                  //var count = (submission.actionItems.length + 1);
-                 
+
+                 $(".actionItem.flexbox.row:contains('----------')").hide();
+
                   $("#addActionItem").click(function () {
                     $(this).remove();
                     $('.newRow').css({'display': 'block'});
@@ -334,6 +335,7 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
                     $('.updateBtn').css({'display': 'inline-block'});
                   });
 
+                  
                   // Get the email modal
                   var emailModal = document.getElementById('emailModal');
                   // Get the email button
@@ -360,8 +362,6 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
                   </div>
                   
                   <% for (i=0; i < submission.actionItems.length; i++) { %>
-
-                    <% var actionItemsCount = -1; %>
                     
                     <div class="actionItem flexbox row">
                       <div class="cell notes">
@@ -370,17 +370,12 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
                       <div class="cell attachments">
                         <% if(submission.actionItems[i].actionItemAttachments.length){ %>
                           <% for(var n=0; n < submission.actionItems[i].actionItemAttachments.length; n++){ %>
-                            <em><a href="<%= submission.actionItems[i].actionItemAttachments[n] %> %>"><%= submission.actionItems[i].actionItemAttachments[n] %></a></em><br />
+                            <em><a href="../../<%= submission.actionItems[i].actionItemAttachments[n] %> %>"><%= submission.actionItems[i].actionItemAttachments[n] %></a></em><br />
                           <% } %>
                         <% } %>
                       </div>
                       <div class="cell id">
-                        <% var action = submission.actionItems; %>
-                        <% action.forEach(function(action, index, arr) { %>
-                          <strong><%= actionItemsCount + 1 %></strong>
-                          <% console.log(actionItemsCount++); %>
-                        <% }) %>
-                       
+                        <%= [i] %>
                       </div>
                     </div>
 
@@ -394,7 +389,7 @@ form.searchBox button {background-color:transparent; border:none; border-radius:
                       <input type="file" name="attachments" maxlength="1000" multiple/>
                     </div>
                     <div class="cell id">
-                      <%= actionItemsCount + 1 %>
+                      <%= [i] %>
                     </div>
                   </div>
                   

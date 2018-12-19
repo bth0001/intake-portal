@@ -85,17 +85,13 @@
                       <div class="cell notes"><%= submission.actionItems[i].actionItemNotes %></div>
                       <div class="cell attachments">
                         <% if(submission.actionItems[i].actionItemAttachments.length){ %>
-                          <% for(var n=0;n<submission.actionItems[i].actionItemAttachments.length;n++){ %>
-                            <a href="<%= submission.actionItems[i].actionItemAttachments[n] %>"><em><%= submission.actionItems[i].actionItemAttachments[n] %></em></a><br />
+                          <% for(var n=0; n < submission.actionItems[i].actionItemAttachments.length; n++){ %>
+                            <a href="../<%= submission.actionItems[i].actionItemAttachments[n] %>"><em><%= submission.actionItems[i].actionItemAttachments[n] %></em></a><br />
                           <% } %>
                         <% } %>
                       </div>
                       <div class="cell id">
-                        <% var action = submission.actionItems; %>
-                        <% action.forEach(function(action, index, arr) { %>
-                          <strong><%= actionItemsCount + 1 %></strong>
-                          <% console.log(actionItemsCount++); %>
-                        <% }) %>
+                        <%= [i] %>
                       </div>
                     </div>
                   <% } %>
@@ -130,6 +126,8 @@
       $("div.actionItem:last-of-type input.actionItemNotes").attr("name", "submission[actionItems][" + count + "][actionItemNotes]");
       $("div.actionItem:last-of-type input.actionItemAttachments").attr("name", "submission[actionItems][" + count + "][actionItemAttachments");
       
+      $(".actionItem.flexbox.row:contains('----------')").hide();
+
       $("#addActionItem").click(function () {              
         count++;
         var oldActionItem = $(".actionItem:last-of-type");

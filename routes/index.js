@@ -23,8 +23,8 @@ var storage = multer.diskStorage({
 });
 var imageFilter = function(req, file, cb) {
   // set acceptable file types
-  if (!file.originalname.match(/\.(pdf|doc|docx|csv|xls|txt|mp3|wav)$/i)) {
-    return cb(new Error("Only pdf, doc, docx, csv, xls, mp3, txt, and wav files are allowed."), false);
+  if (!file.originalname.match(/\.(pdf|doc|docx|csv|xls|txt|mp3|wav|png|jpg|jpeg)$/i)) {
+    return cb(new Error("Only pdf, doc, docx, csv, xls, mp3, txt, png, jpeg,  and wav files are allowed."), false);
   }
   cb(null, true);
 };
@@ -33,12 +33,15 @@ var upload = multer({
   storage: storage,
   fileFilter: imageFilter
 });
+//==============================================================================
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Voice Service Intake Portal' });
 });
+//==============================================================================
 
+/* GET home page. */
 router.get("/search", function(req, res){
   req.session.searchHistory = req.session.searchHistory || [];
 
@@ -73,21 +76,32 @@ router.get("/search", function(req, res){
     console.log(req.flash.error);
   }
 });
+//==============================================================================
 
+/* GET clear-search page. */
 router.get("/clear-search", function(req, res){
   req.session.searchHistory = []
   req.flash("success", "Search History has been cleared!");
   res.redirect("/submissions");
 });
+//==============================================================================
 
 function escapeRegex(text) {
   return text.replace(/[-\/\\^$*+?.()|[\]{}]/, '\\$&');
 };
+//==============================================================================
+
+/* GET client-email-success page. */
+router.get('/client-email-success', function(req, res, next) {
+  res.render('client-email-success', { title: 'Voice Service Intake Portal' });
+});
+//==============================================================================
 
 /* GET post-submission page. */
 router.get('/post-submission', function(req, res, next) {
   res.render('post-submission', { title: 'Voice Service Intake Portal' });
 });
+//==============================================================================
 
 /* GET submissions page. */
 router.get('/submissions', ensureAuthenticated, function(req, res) {
@@ -108,6 +122,7 @@ router.get('/submissions', ensureAuthenticated, function(req, res) {
     });
   });
 });
+//==============================================================================
 
 function ensureAuthenticated(req, res, next){
 	if(req.isAuthenticated()){
@@ -117,6 +132,7 @@ function ensureAuthenticated(req, res, next){
 		res.redirect('/login');
 	}
 };
+//==============================================================================
 
 /* GET submissions received page. */
 router.get('/submissions/received', ensureAuthenticated, function(req, res) {
@@ -137,6 +153,7 @@ router.get('/submissions/received', ensureAuthenticated, function(req, res) {
     });
   });
 });
+//==============================================================================
 
 /* GET submissions in progress page. */
 router.get('/submissions/in-progress', ensureAuthenticated, function(req, res) {
@@ -157,6 +174,7 @@ router.get('/submissions/in-progress', ensureAuthenticated, function(req, res) {
     });
   });
 });
+//==============================================================================
 
 /* GET submissions on hold page. */
 router.get('/submissions/on-hold', ensureAuthenticated, function(req, res) {
@@ -177,6 +195,7 @@ router.get('/submissions/on-hold', ensureAuthenticated, function(req, res) {
     });
   });
 });
+//==============================================================================
 
 /* GET submissions awaiting review page. */
 router.get('/submissions/awaiting-review', ensureAuthenticated, function(req, res) {
@@ -197,6 +216,7 @@ router.get('/submissions/awaiting-review', ensureAuthenticated, function(req, re
     });
   });
 });
+//==============================================================================
 
 /* GET submissions completed page. */
 router.get('/submissions/completed', ensureAuthenticated, function(req, res) {
@@ -217,8 +237,9 @@ router.get('/submissions/completed', ensureAuthenticated, function(req, res) {
     });
   });
 });
+//==============================================================================
 
-//public submissions route
+//POST send email TO client route
 router.post("/send-email", function(req, res) {
   var id = req.body.mainid;
   var clientEmail = req.body.clientEmail;
@@ -236,7 +257,7 @@ router.post("/send-email", function(req, res) {
     from: 'NoReply <westvoiceservices@gmail.com>',
     to: clientEmail,
     subject: 'Your Voice Service submission',
-    html: "<h1>Hi " + clientName + "!</h1><p>Your existing Voice Service submission has been updated.  Click <a href='http://localhost:3000/submissions/" + id + "/public'>here</a> to view.</p>"
+    html: "<h1>Hi " + clientName + "!</h1><p>Your existing West Voice Service submission has been updated.  If you would like to add additional documentation or notes to your submission, please do so by clicking <a href='http://localhost:3000/submissions/" + id + "/public'>here</a>.<br /></p><p>Thank you,</p><h3><em>Your West Voice Service Team</em></h3>"
   };
     
   transporter.sendMail(mailOptions, function(error, info){
@@ -245,8 +266,9 @@ router.post("/send-email", function(req, res) {
     }
   });
 });
+//==============================================================================
 
-//public submissions route
+//public send email FROM client route
 router.post("/send-client-email", function(req, res) {
   var id = req.body.mainid;
   var clientEmail = req.body.clientEmail;
@@ -273,6 +295,7 @@ router.post("/send-client-email", function(req, res) {
     }
   });
 });
+//==============================================================================
 
 //POST new Submission
 router.post("/submissions", upload.array('attachment'), function(req, res){
@@ -319,17 +342,17 @@ console.log(newDoc);
     });
   });
 });
+//==============================================================================
 
-//new Submission form
+//GET new Submission form
 router.get("/submissions/new", ensureAuthenticated, function(req, res){
   User.find({}, function(err, allUsers){
     res.render("submissions/new", {title: 'Voice Service Intake Portal', users: allUsers}); 
   })
 });
-
 //==============================================================================
 
-//SHOW - show more info about one submissions
+//SHOW - show more info about one submission
 router.get("/submissions/:id", ensureAuthenticated, function(req, res) {
   //find the submissions with provided ID
   Submission.findById(req.params.id).exec(function(err, foundSubmission){
@@ -351,8 +374,9 @@ router.get("/submissions/:id", ensureAuthenticated, function(req, res) {
     });
   });
 });
+//==============================================================================
 
-//edit submissions route
+//GET edit submissions route
 router.get("/submissions/:id/edit", ensureAuthenticated, function(req, res) {
   Submission.findById(req.params.id, function(err, foundSubmission) {
     ActionItems.find({}, function(err, allActionItem) {
@@ -368,8 +392,9 @@ router.get("/submissions/:id/edit", ensureAuthenticated, function(req, res) {
     });
   });
 });
+//==============================================================================
 
-//public submissions route
+//GET public submissions route
 router.get("/submissions/:id/public", function(req, res) {
   Submission.findById(req.params.id, function(err, foundSubmission) {
     ActionItems.find({}, function(err, allActionItem) {
@@ -385,6 +410,63 @@ router.get("/submissions/:id/public", function(req, res) {
     });
   });
 });
+//==============================================================================
+
+//PUT -- update public submission route
+router.put("/submissions/:id/public", upload.array('attachments'), function(req, res){
+  Submission.findById(req.params.id, function (err, foundSubmission) {
+    const {submission} = req.body;
+    //Assemble the action item
+    var newDoc = [], existingActionItems = [];
+    for (i=0; i <foundSubmission.actionItems.length; i++){
+      existingActionItems.push(foundSubmission.actionItems[i]);
+    }
+    req.files.map((attachments) => {
+      newDoc.push(attachments.path);
+    });
+    const newAttachment = Object.assign({
+      actionItemNotes: req.body.actionItemNotes,
+      actionItemAttachments: newDoc
+    });
+    existingActionItems.push(newAttachment);
+    var updatedSub = Object.assign(submission, {
+      actionItems: existingActionItems
+    });
+    // find and update correct submission
+    Submission.findByIdAndUpdate(req.params.id, updatedSub, function(err, updatedSubmission){
+      var id = req.body.mainid;
+      var clientEmail = req.body.clientEmail;
+      var clientName = req.body.clientName;
+      if(err){
+        res.redirect("/submissions");
+      } else {
+        req.flash("success", "You have successfully updated the submission");
+        res.render("client-email-success", {
+          title: 'Voice Service Intake Portal'
+        });
+      
+        var transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {user: 'westvoiceservices@gmail.com', pass: 'televoice1'}
+        });
+          
+        var mailOptions = {
+          from: 'NoReply <westvoiceservices@gmail.com>',
+          to: 'westvoiceservices@gmail.com',
+          subject: 'A Voice Service submission has been updated',
+          html: "<h1>Hi!</h1><p>An existing Voice Service submission from " + clientName + " has been updated.  Log in <a href='http://localhost:3000/submissions/'>here</a> to view.</p>"
+        };
+          
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {console.log(error);} else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
+      }
+    });
+  })
+});
+//==============================================================================
 
 //update submissions route
 router.put("/submissions/:id", upload.array('attachments'), function(req, res){
@@ -405,7 +487,7 @@ router.put("/submissions/:id", upload.array('attachments'), function(req, res){
       actionItemAttachments: newDoc
     });
     existingActionItems.push(newAttachment);
-    var updatedSub = Object.assign(foundSubmission, {
+    var updatedSub = Object.assign(submission, {
       actionItems: existingActionItems
     });
     // find and update correct submission
@@ -419,12 +501,14 @@ router.put("/submissions/:id", upload.array('attachments'), function(req, res){
     });
   })
 });
+//==============================================================================
 
 //Register form route
 router.get("/signup", function(req, res){
   res.render("signup", {title: "Voice Service Intake Portal"})
 });
-  
+//==============================================================================
+
 //handles signup route
 router.post("/signup", function(req, res){
   var name = req.body.name;
@@ -480,6 +564,7 @@ router.post("/signup", function(req, res){
     });
   }
 });
+//==============================================================================
 
 passport.use(new localStrategy(
 	function (username, password, done) {
@@ -499,10 +584,12 @@ passport.use(new localStrategy(
 		});
   })
 );
+//==============================================================================
 
 passport.serializeUser(function (user, done) {
 	done(null, user.id);
 });
+//==============================================================================
 
 passport.deserializeUser(function (id, done) {
 	User.getUserById(id, function (err, user) {
@@ -515,6 +602,7 @@ passport.deserializeUser(function (id, done) {
 router.get("/login", function(req, res){
   res.render("login", {title: "Voice Service Intake Portal", user: req.user });
 });
+//==============================================================================
 
 //handling login logic
 router.post('/login', passport.authenticate('local', {successRedirect:'/submissions', faliureRedirect:'login', failureFlash:true}), function(req, res) {
